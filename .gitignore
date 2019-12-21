@@ -1,0 +1,13 @@
+lib
+dub.selections.json
+.dub
+.vs
+.vscode
+*.sln
+*.visualdproj
+*.7z
+*.lib
+*.exp
+*.dll
+*.exe
+

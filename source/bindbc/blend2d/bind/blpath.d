@@ -9,7 +9,7 @@ import bindbc.blend2d.bind.blarray;
 import bindbc.blend2d.bind.blgeometry;
 import bindbc.blend2d.bind.blvariant;
 
-extern (System):
+//extern (System):
 
 //! \addtogroup blend2d_api_geometry
 //! \{

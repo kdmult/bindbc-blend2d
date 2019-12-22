@@ -1,6 +1,6 @@
 module bindbc.blend2d.types;
 
-import bindbc.blend2d.bind.blapi : BL_VERSION;
+public import bindbc.blend2d.bind;
 
 enum Blend2DSupport {
     noLibrary,

@@ -8,7 +8,7 @@ module bindbc.blend2d.bind.blarray;
 import bindbc.blend2d.bind.blapi;
 import bindbc.blend2d.bind.blvariant;
 
-extern (System):
+//extern (System):
 
 // ============================================================================
 // [BLArray - Core]

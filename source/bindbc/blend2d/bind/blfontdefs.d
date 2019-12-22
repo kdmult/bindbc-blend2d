@@ -8,7 +8,7 @@ module bindbc.blend2d.bind.blfontdefs;
 import bindbc.blend2d.bind.blapi;
 import bindbc.blend2d.bind.blgeometry;
 
-extern (System):
+//extern (System):
 
 //! \addtogroup blend2d_api_text
 //! \{

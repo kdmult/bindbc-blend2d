@@ -14,7 +14,7 @@ import bindbc.blend2d.bind.blpath;
 import bindbc.blend2d.bind.blstring;
 import bindbc.blend2d.bind.blvariant;
 
-extern (System):
+//extern (System):
 
 //! \addtogroup blend2d_api_text
 //! \{

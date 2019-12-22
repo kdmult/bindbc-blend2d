@@ -17,7 +17,7 @@ import bindbc.blend2d.bind.blrgba;
 import bindbc.blend2d.bind.blregion;
 import bindbc.blend2d.bind.blvariant;
 
-extern (System):
+//extern (System):
 
 //! \addtogroup blend2d_api_rendering
 //! \{

@@ -8,7 +8,7 @@ module bindbc.blend2d.bind.blstring;
 import bindbc.blend2d.bind.blapi;
 import bindbc.blend2d.bind.blvariant;
 
-extern (System):
+//extern (System):
 
 //! \addtogroup blend2d_api_globals
 //! \{

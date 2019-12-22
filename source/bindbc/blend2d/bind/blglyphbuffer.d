@@ -7,7 +7,7 @@ module bindbc.blend2d.bind.blglyphbuffer;
 
 import bindbc.blend2d.bind.blfontdefs;
 
-extern (System):
+//extern (System):
 
 //! \addtogroup blend2d_api_text
 //! \{

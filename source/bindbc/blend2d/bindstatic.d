@@ -7,4 +7,5 @@ import bindbc.blend2d.types;
 
 extern(C) @nogc nothrow {
     import bindbc.blend2d.bind;
+    import bindbc.blend2d.bind.blapi_c_functions.d;
 }

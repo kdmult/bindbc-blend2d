@@ -7,7 +7,7 @@ module bindbc.blend2d.bind.blmatrix;
 
 import bindbc.blend2d.bind.blgeometry;
 
-extern (System):
+//extern (System):
 
 //! \addtogroup blend2d_api_geometry
 //! \{

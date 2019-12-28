@@ -1,5 +1,5 @@
 name "bindbc-blend2d"
-description "Dynamic and static bindings to Blend2D, compatible with -betterC, @nogc, and nothrow."
+description "Dynamic and static bindings to the Blend2D C API, compatible with -betterC, @nogc, and nothrow."
 homepage ""
 authors "kdmult"
 license "BSL-1.0"

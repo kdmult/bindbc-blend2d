@@ -58,6 +58,12 @@ enum BLGlyphRunFlags {
     BL_GLYPH_RUN_FLAG_INVALID_FONT_DATA = 0x80000000u
 }
 
+//! Font-data flags.
+enum BLFontDataFlags {
+    //!< Font data references a font-collection.
+    BL_FONT_DATA_FLAG_COLLECTION = 0x00000001u
+}
+
 //! Type of a font or font-face.
 enum BLFontFaceType {
     //! None or unknown font type.
@@ -86,14 +92,18 @@ enum BLFontFaceFlags {
     BL_FONT_FACE_FLAG_VERTICAL_KERNING = 0x00000080u,
     //! OpenType features (GDEF, GPOS, GSUB) are available.
     BL_FONT_FACE_FLAG_OPENTYPE_FEATURES = 0x00000100u,
-    //! OpenType BLFont Variations feature is available.
-    BL_FONT_FACE_FLAG_OPENTYPE_VARIATIONS = 0x20000000u,
     //! Panose classification is available.
     BL_FONT_FACE_FLAG_PANOSE_DATA = 0x00000200u,
     //! Unicode coverage information is available.
     BL_FONT_FACE_FLAG_UNICODE_COVERAGE = 0x00000400u,
+    //! Baseline for font at `y` equals 0.
+    BL_FONT_FACE_FLAG_BASELINE_Y_EQUALS_0 = 0x00001000u,
+    //! Left sidebearing point at `x == 0` (TT only).
+    BL_FONT_FACE_FLAG_LSB_POINT_X_EQUALS_0 = 0x00002000u,
     //! Unicode variation sequences feature is available.
     BL_FONT_FACE_FLAG_VARIATION_SEQUENCES = 0x10000000u,
+    //! OpenType Font Variations feature is available.
+    BL_FONT_FACE_FLAG_OPENTYPE_VARIATIONS = 0x20000000u,
     //! This is a symbol font.
     BL_FONT_FACE_FLAG_SYMBOL_FONT = 0x40000000u,
     //! This is a last resort font.
@@ -122,10 +132,6 @@ enum BLFontFaceDiagFlags {
     BL_FONT_FACE_DIAG_WRONG_GPOS_DATA = 0x00000400u,
     //! Wrong data in 'GSUB' table.
     BL_FONT_FACE_DIAG_WRONG_GSUB_DATA = 0x00001000u
-}
-
-enum BLFontLoaderFlags {
-    BL_FONT_LOADER_FLAG_COLLECTION = 0x00000001u //!< Font loader contains a font-collection (multiple font-faces).
 }
 
 //! Format of an outline stored in a font.
@@ -579,13 +585,19 @@ struct BLFontFaceInfo {
     //! Number of glyphs provided by this font-face.
     ushort glyphCount;
 
-    //! Face index in a ttf/otf collection (or zero).
+    //! Revision (read from 'head' table, represented as 16.16 fixed point).
+    uint revision;
+
+    //! Face-face index in a TTF/OTF collection or zero if not part of a collection.
     uint faceIndex;
     //! Font-face flags, see `BLFontFaceFlags`
     uint faceFlags;
 
     //! Font-face diagnostic flags, see`BLFontFaceDiagFlags`.
     uint diagFlags;
+
+    //! Reserved for future use, set to zero.
+    uint[3] reserved;
 }
 
 // ============================================================================
@@ -769,6 +781,15 @@ struct BLFontMetrics {
     //! Maximum height of a capital letter above the baseline.
     float capHeight;
 
+    //! Minimum x, reported by the font.
+    float xMin;
+    //! Minimum y, reported by the font.
+    float yMin;
+    //! Maximum x, reported by the font.
+    float xMax;
+    //! Maximum y, reported by the font.
+    float yMax;
+
     //! Text underline position.
     float underlinePosition;
     //! Text underline thickness.
@@ -794,6 +815,8 @@ struct BLFontMetrics {
 struct BLFontDesignMetrics {
     //! Units per EM square.
     int unitsPerEm;
+    //! Lowest readable size in pixels.
+    int lowestPPEM;
     //! Line gap.
     int lineGap;
     //! Distance between the baseline and the mean line of lower-case letters.
@@ -839,6 +862,24 @@ struct BLFontDesignMetrics {
         }
     }
 
+    union {
+        //! Aggregated bounding box of all glyphs in the font.
+        //!
+        //! \note This value is reported by the face so it's not granted to be true.
+        BLBoxI glyphBoundingBox;
+
+        struct {
+            //! Minimum x, reported by the font.
+            int xMin;
+            //! Minimum y, reported by the font.
+            int yMin;
+            //! Maximum x, reported by the font.
+            int xMax;
+            //! Maximum y, reported by the font.
+            int yMax;
+        }
+    }
+
     //! Text underline position.
     int underlinePosition;
     //! Text underline thickness.
@@ -856,6 +897,8 @@ struct BLFontDesignMetrics {
 //! Text metrics.
 struct BLTextMetrics {
     BLPoint advance;
+    BLPoint leadingBearing;
+    BLPoint trailingBearing;
     BLBox boundingBox;
 }
 

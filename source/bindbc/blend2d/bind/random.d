@@ -25,42 +25,6 @@ import bindbc.blend2d.bind.api;
 //!   http://vigna.di.unimi.it/ftp/papers/xorshiftplus.pdf
 struct BLRandom {
     ulong[2] data;
-
-    // --------------------------------------------------------------------------
-
-    //! \name Construction & Destruction
-    //! \{
-
-    //! \}
-
-    //! \name Overloaded Operators
-    //! \{
-
-    //! \}
-
-    //! \name Common Functionality
-    //! \{
-
-    //! Resets the random number generator to the given `seed`.
-
-    //! Tests whether the random number generator is equivalent to `other`.
-
-    //! \}
-
-    //! \name Random Numbers
-    //! \{
-
-    //! Returns the next `uint64_t` value.
-
-    //! Returns the next `uint32_t` value.
-
-    //! Returns the next `double` precision floating point in [0..1) range.
-
-    //! \}
-
-    // --------------------------------------------------------------------------
 }
 
 //! \}
-
-// BLEND2D_BLRANDOM_H

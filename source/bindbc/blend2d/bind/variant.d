@@ -23,86 +23,94 @@ extern(System) :
 enum BLImplType {
     //! Type is `Null`.
     BL_IMPL_TYPE_NULL = 0,
-    //! Type is `BLBitArray`.
-    BL_IMPL_TYPE_BIT_ARRAY = 1,
-    //! Type is `BLString`.
-    BL_IMPL_TYPE_STRING = 2,
+
     //! Type is `BLArray<T>` where `T` is `BLVariant` or other ref-counted type.
-    BL_IMPL_TYPE_ARRAY_VAR = 3,
+    BL_IMPL_TYPE_ARRAY_VAR = 1,
     //! Type is `BLArray<T>` where `T` matches 8-bit signed integral type.
-    BL_IMPL_TYPE_ARRAY_I8 = 4,
+    BL_IMPL_TYPE_ARRAY_I8 = 2,
     //! Type is `BLArray<T>` where `T` matches 8-bit unsigned integral type.
-    BL_IMPL_TYPE_ARRAY_U8 = 5,
+    BL_IMPL_TYPE_ARRAY_U8 = 3,
     //! Type is `BLArray<T>` where `T` matches 16-bit signed integral type.
-    BL_IMPL_TYPE_ARRAY_I16 = 6,
+    BL_IMPL_TYPE_ARRAY_I16 = 4,
     //! Type is `BLArray<T>` where `T` matches 16-bit unsigned integral type.
-    BL_IMPL_TYPE_ARRAY_U16 = 7,
+    BL_IMPL_TYPE_ARRAY_U16 = 5,
     //! Type is `BLArray<T>` where `T` matches 32-bit signed integral type.
-    BL_IMPL_TYPE_ARRAY_I32 = 8,
+    BL_IMPL_TYPE_ARRAY_I32 = 6,
     //! Type is `BLArray<T>` where `T` matches 32-bit unsigned integral type.
-    BL_IMPL_TYPE_ARRAY_U32 = 9,
+    BL_IMPL_TYPE_ARRAY_U32 = 7,
     //! Type is `BLArray<T>` where `T` matches 64-bit signed integral type.
-    BL_IMPL_TYPE_ARRAY_I64 = 10,
+    BL_IMPL_TYPE_ARRAY_I64 = 8,
     //! Type is `BLArray<T>` where `T` matches 64-bit unsigned integral type.
-    BL_IMPL_TYPE_ARRAY_U64 = 11,
+    BL_IMPL_TYPE_ARRAY_U64 = 9,
     //! Type is `BLArray<T>` where `T` matches 32-bit floating point type.
-    BL_IMPL_TYPE_ARRAY_F32 = 12,
+    BL_IMPL_TYPE_ARRAY_F32 = 10,
     //! Type is `BLArray<T>` where `T` matches 64-bit floating point type.
-    BL_IMPL_TYPE_ARRAY_F64 = 13,
+    BL_IMPL_TYPE_ARRAY_F64 = 11,
     //! Type is `BLArray<T>` where `T` is a struct of size 1.
-    BL_IMPL_TYPE_ARRAY_STRUCT_1 = 14,
+    BL_IMPL_TYPE_ARRAY_STRUCT_1 = 12,
     //! Type is `BLArray<T>` where `T` is a struct of size 2.
-    BL_IMPL_TYPE_ARRAY_STRUCT_2 = 15,
+    BL_IMPL_TYPE_ARRAY_STRUCT_2 = 13,
     //! Type is `BLArray<T>` where `T` is a struct of size 3.
-    BL_IMPL_TYPE_ARRAY_STRUCT_3 = 16,
+    BL_IMPL_TYPE_ARRAY_STRUCT_3 = 14,
     //! Type is `BLArray<T>` where `T` is a struct of size 4.
-    BL_IMPL_TYPE_ARRAY_STRUCT_4 = 17,
+    BL_IMPL_TYPE_ARRAY_STRUCT_4 = 15,
     //! Type is `BLArray<T>` where `T` is a struct of size 6.
-    BL_IMPL_TYPE_ARRAY_STRUCT_6 = 18,
+    BL_IMPL_TYPE_ARRAY_STRUCT_6 = 16,
     //! Type is `BLArray<T>` where `T` is a struct of size 8.
-    BL_IMPL_TYPE_ARRAY_STRUCT_8 = 19,
+    BL_IMPL_TYPE_ARRAY_STRUCT_8 = 17,
     //! Type is `BLArray<T>` where `T` is a struct of size 10.
-    BL_IMPL_TYPE_ARRAY_STRUCT_10 = 20,
+    BL_IMPL_TYPE_ARRAY_STRUCT_10 = 18,
     //! Type is `BLArray<T>` where `T` is a struct of size 12.
-    BL_IMPL_TYPE_ARRAY_STRUCT_12 = 21,
+    BL_IMPL_TYPE_ARRAY_STRUCT_12 = 19,
     //! Type is `BLArray<T>` where `T` is a struct of size 16.
-    BL_IMPL_TYPE_ARRAY_STRUCT_16 = 22,
+    BL_IMPL_TYPE_ARRAY_STRUCT_16 = 20,
     //! Type is `BLArray<T>` where `T` is a struct of size 20.
-    BL_IMPL_TYPE_ARRAY_STRUCT_20 = 23,
+    BL_IMPL_TYPE_ARRAY_STRUCT_20 = 21,
     //! Type is `BLArray<T>` where `T` is a struct of size 24.
-    BL_IMPL_TYPE_ARRAY_STRUCT_24 = 24,
+    BL_IMPL_TYPE_ARRAY_STRUCT_24 = 22,
     //! Type is `BLArray<T>` where `T` is a struct of size 32.
-    BL_IMPL_TYPE_ARRAY_STRUCT_32 = 25,
+    BL_IMPL_TYPE_ARRAY_STRUCT_32 = 23,
+
+    //! Type is `BLBitArray`.
+    BL_IMPL_TYPE_BIT_ARRAY = 32,
+    //! Type is `BLBitSet`.
+    BL_IMPL_TYPE_BIT_SET = 33,
+    //! Type is `BLString`.
+    BL_IMPL_TYPE_STRING = 39,
+
     //! Type is `BLPath`.
-    BL_IMPL_TYPE_PATH = 32,
+    BL_IMPL_TYPE_PATH = 40,
     //! Type is `BLRegion`.
-    BL_IMPL_TYPE_REGION = 33,
+    BL_IMPL_TYPE_REGION = 43,
     //! Type is `BLImage`.
-    BL_IMPL_TYPE_IMAGE = 34,
+    BL_IMPL_TYPE_IMAGE = 44,
     //! Type is `BLImageCodec`.
-    BL_IMPL_TYPE_IMAGE_CODEC = 35,
+    BL_IMPL_TYPE_IMAGE_CODEC = 45,
     //! Type is `BLImageDecoder`.
-    BL_IMPL_TYPE_IMAGE_DECODER = 36,
+    BL_IMPL_TYPE_IMAGE_DECODER = 46,
     //! Type is `BLImageEncoder`.
-    BL_IMPL_TYPE_IMAGE_ENCODER = 37,
+    BL_IMPL_TYPE_IMAGE_ENCODER = 47,
     //! Type is `BLGradient`.
-    BL_IMPL_TYPE_GRADIENT = 38,
+    BL_IMPL_TYPE_GRADIENT = 48,
     //! Type is `BLPattern`.
-    BL_IMPL_TYPE_PATTERN = 39,
+    BL_IMPL_TYPE_PATTERN = 49,
+
     //! Type is `BLContext`.
-    BL_IMPL_TYPE_CONTEXT = 40,
+    BL_IMPL_TYPE_CONTEXT = 55,
+
     //! Type is `BLFont`.
-    BL_IMPL_TYPE_FONT = 50,
+    BL_IMPL_TYPE_FONT = 56,
     //! Type is `BLFontFace`.
-    BL_IMPL_TYPE_FONT_FACE = 51,
+    BL_IMPL_TYPE_FONT_FACE = 57,
     //! Type is `BLFontData`.
-    BL_IMPL_TYPE_FONT_DATA = 52,
-    //! Type is `BLFontLoader`.
-    BL_IMPL_TYPE_FONT_LOADER = 53,
+    BL_IMPL_TYPE_FONT_DATA = 58,
+    //! Type is `BLFontManager`.
+    BL_IMPL_TYPE_FONT_MANAGER = 59,
+
     //! Type is `BLFontFeatureOptions`.
-    BL_IMPL_TYPE_FONT_FEATURE_OPTIONS = 54,
+    BL_IMPL_TYPE_FONT_FEATURE_OPTIONS = 60,
     //! Type is `BLFontVariationOptions`.
-    BL_IMPL_TYPE_FONT_VARIATION_OPTIONS = 55,
+    BL_IMPL_TYPE_FONT_VARIATION_OPTIONS = 61,
 
     //! Count of type identifiers including all reserved ones.
     BL_IMPL_TYPE_COUNT = 64
@@ -145,17 +153,15 @@ struct BLVariantImpl {
     //! fields at index [1] and [2] in case of object or 3 reserved fields in
     //! case of value.
     union {
-        //! Virtual function table (only available to impls with BL_IMPL_TRAIT_VIRT trait).
+        //! Virtual function table (only available to impls with `BL_IMPL_TRAIT_VIRT`
+        //! trait).
         const(void)* virt;
-        //! Space reserved for object/value header (must be array-view if the impl is container).
-        uintptr_t[3] header;
+        //! Space reserved for object/value header other than virtual function table.
+        //!
+        //! This is always `capacity` when the Impl is a container, otherwise it's
+        //! implementation dependent what this field is.
+        uintptr_t unknownHeaderData;
     }
-
-    // IMPL COMMON
-    // -----------
-    //
-    // [32-bit: 8  bytes]
-    // [64-bit: 12 bytes]
 
     //! Reference count.
     size_t refCount;
@@ -169,7 +175,7 @@ struct BLVariantImpl {
     // IMPL BODY
     // ---------
 
-    //! Reserved data, free to be used by the impl (padding for us).
+    //! Reserved data (padding) that is free to be used by the Impl.
     ubyte[4] reserved;
 }
 
@@ -183,19 +189,4 @@ extern __gshared BLVariantCore[BLImplType.BL_IMPL_TYPE_COUNT] blNone;
 
 // {Extern:C}
 
-// ============================================================================
-// [BLVariant - C++]
-// ============================================================================
-
-//! Variant [C++ API].
-//!
-//! `BLVariant` defines a common interface that can be used to work with both
-//! Blend2D values and objects in an abstract way without knowing their type.
-//! Since both objects and values share the same common strucutre it's possible
-//! to treat them as same at the lowest level (memory and lifetime management).
-
-//! Tests whether the variant is a built-in null instance (of any impl-type).
-
 //! \}
-
-// BLEND2D_BLVARIANT_H

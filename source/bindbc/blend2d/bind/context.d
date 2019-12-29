@@ -303,7 +303,8 @@ struct BLContextState {
     ubyte compOp;
     //! Current fill rule.
     ubyte fillRule;
-    //! Current type of a style for fill and stroke operations, see `BLContextOpType`.
+    //! Current type of a style for fill and stroke operations, see `BLContextOpType`
+    //! that describes indexes and `BLStyleType` that describes styles.
     ubyte[2] styleType;
     //! Reserved for future use, must be zero.
     ubyte[4] reserved;
@@ -410,10 +411,6 @@ struct BLContextVirt {
 struct BLContextImpl {
     //! Virtual function table.
     const(BLContextVirt)* virt;
-    //! Current state of the context.
-    const(BLContextState)* state;
-    //! Reserved header for future use.
-    void* reservedHeader;
 
     //! Reference count.
     size_t refCount;
@@ -428,6 +425,8 @@ struct BLContextImpl {
 
     //! Current size of the target in abstract units, pixels if rendering to `BLImage`.
     BLSize targetSize;
+    //! Current state of the context.
+    const(BLContextState)* state;
 }
 
 //! Rendering context [C Interface - Core].

@@ -23,8 +23,6 @@ import bindbc.blend2d.bind.variant;
 struct BLPatternImpl {
     //! Image used by the pattern.
     BLImageCore image;
-    //! Reserved, must be null.
-    void*[2] reservedHeader;
 
     //! Reference count.
     size_t refCount;
@@ -55,60 +53,4 @@ struct BLPatternCore {
     BLPatternImpl* impl;
 }
 
-// ============================================================================
-// [BLPattern - C++]
-// ============================================================================
-
-//! Pattern [C++ API].
-
-//! \cond INTERNAL
-
-//! \endcond
-
-//! \name Construction & Destruction
-//! \{
-
 //! \}
-
-//! \name Overloaded Operators
-//! \{
-
-//! \}
-
-//! \name Common Functionality
-//! \{
-
-//! Tests whether the pattern is a built-in null instance.
-
-//! \}
-
-//! \name Create Pattern
-//! \{
-
-//! \}
-
-//! \name Pattern Source
-//! \{
-
-//! \}
-
-//! \name Pattern Options
-//! \{
-
-//! \}
-
-//! \name Transformations
-//! \{
-
-//! Applies a matrix operation to the current transformation matrix (internal).
-
-//! \cond INTERNAL
-//! Applies a matrix operation to the current transformation matrix (internal).
-
-//! \endcond
-
-//! \}
-
-//! \}
-
-// BLEND2D_BLPATTERN_H

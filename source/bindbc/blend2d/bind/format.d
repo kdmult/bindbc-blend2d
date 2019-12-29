@@ -71,7 +71,31 @@ enum BLFormatFlags {
     // calculated.
 
     //! Pixel components are byte aligned (all 8bpp).
-    BL_FORMAT_FLAG_BYTE_ALIGNED = 0x00010000u
+    BL_FORMAT_FLAG_BYTE_ALIGNED = 0x00010000u,
+
+    //! Pixel has some undefined bits that represent no information.
+    //!
+    //! For example a 32-bit XRGB pixel has 8 undefined bits that are usually set
+    //! to all ones so the format can be interpreted as premultiplied RGB as well.
+    //! There are other formats like 16_0555 where the bit has no information and
+    //! is usually set to zero. Blend2D doesn't rely on the content of such bits.
+    BL_FORMAT_FLAG_UNDEFINED_BITS = 0x00020000u,
+
+    //! Convenience flag that contains either zero or `BL_FORMAT_FLAG_BYTE_SWAP`
+    //! depending on host byte order. Little endian hosts have this flag set to
+    //! zero and big endian hosts to `BL_FORMAT_FLAG_BYTE_SWAP`.
+    //!
+    //! \note This is not a real flag that you can test, it's only provided for
+    //! convenience to define little endian pixel formats.
+    BL_FORMAT_FLAG_LE = (BL_BYTE_ORDER == 1234) ? cast(uint) 0 : cast(uint) BL_FORMAT_FLAG_BYTE_SWAP,
+
+    //! Convenience flag that contains either zero or `BL_FORMAT_FLAG_BYTE_SWAP`
+    //! depending on host byte order. Big endian hosts have this flag set to
+    //! zero and little endian hosts to `BL_FORMAT_FLAG_BYTE_SWAP`.
+    //!
+    //! \note This is not a real flag that you can test, it's only provided for
+    //! convenience to define big endian pixel formats.
+    BL_FORMAT_FLAG_BE = (BL_BYTE_ORDER == 4321) ? cast(uint) 0 : cast(uint) BL_FORMAT_FLAG_BYTE_SWAP
 }
 
 // ============================================================================

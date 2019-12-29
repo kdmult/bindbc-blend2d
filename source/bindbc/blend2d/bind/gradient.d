@@ -165,18 +165,6 @@ struct BLConicalGradientValues {
 
 //! Gradient [C Interface - Impl].
 struct BLGradientImpl {
-    //! Union of either raw `stops` & `size` members or their `view`.
-    union {
-        struct {
-            //! Gradient stop data.
-            BLGradientStop* stops;
-            //! Gradient stop count.
-            size_t size;
-        }
-
-        //! Gradient stop view (C++ only).
-    }
-
     //! Stop capacity.
     size_t capacity;
 
@@ -198,6 +186,18 @@ struct BLGradientImpl {
     //! Reserved, must be zero.
     ubyte[1] reserved;
 
+    //! Union of either raw `stops` & `size` members or their `view`.
+    union {
+        struct {
+            //! Gradient stop data.
+            BLGradientStop* stops;
+            //! Gradient stop count.
+            size_t size;
+        }
+
+        //! Gradient stop view (C++ only).
+    }
+
     //! Gradient transformation matrix.
     BLMatrix2D matrix;
 
@@ -218,74 +218,5 @@ struct BLGradientCore {
     BLGradientImpl* impl;
 }
 
-// ============================================================================
-// [BLGradient - C++]
-// ============================================================================
-
-//! Gradient [C++ API].
-
-//! \cond INTERNAL
-
-//! \endcond
-
-//! \name Construction & Destruction
-//! \{
 
 //! \}
-
-//! \name Overloaded Operators
-//! \{
-
-//! \}
-
-//! \name Common Functionality
-//! \{
-
-//! Tests whether the gradient is a built-in null instance.
-
-//! \}
-
-//! \name Create Gradient
-//! \{
-
-//! \}
-
-//! \name Gradient Options
-//! \{
-
-//! Returns the type of the gradient, see `BLGradientType`.
-
-//! Sets the gradient type, see `BLGradientType`.
-
-//! Returns the gradient extend mode, see `BLExtendMode`.
-
-//! Set the gradient extend mode, see `BLExtendMode`.
-
-//! Resets the gradient extend mode to `BL_EXTEND_MODE_PAD`.
-
-//! \}
-
-//! \name Gradient Stops
-//! \{
-
-//! Reserve the capacity of gradient stops for at least `n` stops.
-
-//! Shrink the capacity of gradient stops to fit the current usage.
-
-//! \}
-
-//! \name Transformations
-//! \{
-
-//! Applies a matrix operation to the current transformation matrix (internal).
-
-//! \cond INTERNAL
-//! Applies a matrix operation to the current transformation matrix (internal).
-
-//! \endcond
-
-//! \}
-
-//! \}
-
-// BLEND2D_BLGRADIENT_H

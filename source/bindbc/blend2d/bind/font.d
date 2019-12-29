@@ -26,18 +26,14 @@ import bindbc.blend2d.bind.variant;
 //! Font data [C Interface - Virtual Function Table].
 struct BLFontDataVirt {
     BLResult function(BLFontDataImpl* impl) destroy;
-    BLResult function(const(BLFontDataImpl)* impl, BLArrayCore* out_) listTags;
-    size_t function(const(BLFontDataImpl)* impl, BLFontTable* dst, const(BLTag)* tags, size_t n) queryTables;
+    BLResult function(const(BLFontDataImpl)* impl, uint faceIndex, BLArrayCore* out_) listTags;
+    size_t function(const(BLFontDataImpl)* impl, uint faceIndex, BLFontTable* dst, const(BLTag)* tags, size_t n) queryTables;
 }
 
 //! Font data [C Interface - Impl].
 struct BLFontDataImpl {
     //! Virtual function table.
     const(BLFontDataVirt)* virt;
-    //! Pointer to the start of font-data (null if the data is provided at a table level).
-    void* data;
-    //! Size of `data` [in bytes] (zero if the data is provided at a table level).
-    size_t size;
 
     //! Reference count.
     size_t refCount;
@@ -47,54 +43,20 @@ struct BLFontDataImpl {
     ubyte implTraits;
     //! Memory pool data.
     ushort memPoolData;
+    //! Type of the face that would be created with this font-data.
+    ubyte faceType;
+    //! Reserved for future use, must be zero.
+    ubyte[3] reserved;
+
+    //! Number of font-faces stored in this font-data instance.
+    uint faceCount;
     //! Font-data flags.
     uint flags;
-    //! Offset to the font header from the beginning of `data`.
-    size_t headerOffset;
 }
 
 //! Font data [C Interface - Core].
 struct BLFontDataCore {
     BLFontDataImpl* impl;
-}
-
-// ============================================================================
-// [BLFontLoader - Core]
-// ============================================================================
-
-//! Font loader [C Interface - Virtual Function Table].
-struct BLFontLoaderVirt {
-    BLResult function(BLFontLoaderImpl* impl) destroy;
-    BLFontDataImpl* function(BLFontLoaderImpl* impl, uint faceIndex) dataByFaceIndex;
-}
-
-//! Font loader [C Interface - Impl].
-struct BLFontLoaderImpl {
-    //! Virtual function table.
-    const(BLFontLoaderVirt)* virt;
-    //! Pointer to the start of font-data (null if the data is provided at table level).
-    void* data;
-    //! Size of `data` [in bytes] (zero if the data is provided at table level).
-    size_t size;
-
-    //! Reference count.
-    size_t refCount;
-    //! Impl type.
-    ubyte implType;
-    //! Impl traits.
-    ubyte implTraits;
-    //! Memory pool data.
-    ushort memPoolData;
-
-    ubyte faceType;
-    ubyte[3] reserved;
-    uint faceCount;
-    uint loaderFlags;
-}
-
-//! Font loader [C Interface - Core].
-struct BLFontLoaderCore {
-    BLFontLoaderImpl* impl;
 }
 
 // ============================================================================
@@ -110,10 +72,6 @@ struct BLFontFaceVirt {
 struct BLFontFaceImpl {
     //! Virtual function table.
     const(BLFontFaceVirt)* virt;
-    //! Font data.
-    BLFontDataCore data;
-    //! Font loader used to load `BLFontData`.
-    BLFontLoaderCore loader;
 
     //! Reference count.
     size_t refCount;
@@ -133,10 +91,11 @@ struct BLFontFaceImpl {
 
     //! Font-face information.
     BLFontFaceInfo faceInfo;
-
     //! Unique face id assigned by Blend2D for caching.
     ulong faceUniqueId;
 
+    //! Font data.
+    BLFontDataCore data;
     //! Full name.
     BLStringCore fullName;
     //! Family name.
@@ -167,10 +126,6 @@ struct BLFontFaceCore {
 struct BLFontImpl {
     //! Font-face used by this font.
     BLFontFaceCore face;
-    //! Font features.
-    BLArrayCore features;
-    //! Font variations.
-    BLArrayCore variations;
 
     //! Reference count.
     size_t refCount;
@@ -188,7 +143,13 @@ struct BLFontImpl {
     //! Font style.
     ubyte style;
 
+    //! Font features.
+    BLArrayCore features;
+    //! Font variations.
+    BLArrayCore variations;
+    //! Font metrics.
     BLFontMetrics metrics;
+    //! Font matrix.
     BLFontMatrix matrix;
 }
 

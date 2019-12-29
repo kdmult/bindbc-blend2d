@@ -19,16 +19,6 @@ import bindbc.blend2d.bind.variant;
 
 //! Array container [C Interface - Impl].
 struct BLArrayImpl {
-    union {
-        struct {
-            //! Array data (as `void`).
-            void* data;
-            //! Array size.
-            size_t size;
-        }
-        //! Array data and size as a view.
-        BLDataView view;
-    }
     //! Array capacity.
     size_t capacity;
 
@@ -47,6 +37,17 @@ struct BLArrayImpl {
     ubyte dispatchType;
     //! Reserved, must be set to 0.
     ubyte[2] reserved;
+
+    union {
+        struct {
+            //! Array data (as `void`).
+            void* data;
+            //! Array size.
+            size_t size;
+        }
+        //! Array data and size as a view.
+        BLDataView view;
+    }
 }
 
 //! Array container [C Interface - Core].

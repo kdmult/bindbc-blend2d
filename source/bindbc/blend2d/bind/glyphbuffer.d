@@ -3,9 +3,9 @@
 //
 // [License]
 // Zlib - See LICENSE.md file in the package.
-module bindbc.blend2d.bind.blglyphbuffer;
+module bindbc.blend2d.bind.glyphbuffer;
 
-import bindbc.blend2d.bind.blfontdefs;
+import bindbc.blend2d.bind.fontdefs;
 
 //extern (System):
 

@@ -3,12 +3,12 @@
 //
 // [License]
 // Zlib - See LICENSE.md file in the package.
-module bindbc.blend2d.bind.blgradient;
+module bindbc.blend2d.bind.gradient;
 
-import bindbc.blend2d.bind.blgeometry;
-import bindbc.blend2d.bind.blmatrix;
-import bindbc.blend2d.bind.blrgba;
-import bindbc.blend2d.bind.blvariant;
+import bindbc.blend2d.bind.geometry;
+import bindbc.blend2d.bind.matrix;
+import bindbc.blend2d.bind.rgba;
+import bindbc.blend2d.bind.variant;
 
 //extern (System):
 

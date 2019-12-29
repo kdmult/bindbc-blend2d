@@ -3,10 +3,10 @@
 //
 // [License]
 // Zlib - See LICENSE.md file in the package.
-module bindbc.blend2d.bind.blfontdefs;
+module bindbc.blend2d.bind.fontdefs;
 
-import bindbc.blend2d.bind.blapi;
-import bindbc.blend2d.bind.blgeometry;
+import bindbc.blend2d.bind.api;
+import bindbc.blend2d.bind.geometry;
 
 //extern (System):
 

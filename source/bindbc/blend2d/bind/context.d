@@ -3,19 +3,19 @@
 //
 // [License]
 // Zlib - See LICENSE.md file in the package.
-module bindbc.blend2d.bind.blcontext;
+module bindbc.blend2d.bind.context;
 
-import bindbc.blend2d.bind.blapi;
-import bindbc.blend2d.bind.blarray;
-import bindbc.blend2d.bind.blfont;
-import bindbc.blend2d.bind.blfontdefs;
-import bindbc.blend2d.bind.blgeometry;
-import bindbc.blend2d.bind.blimage;
-import bindbc.blend2d.bind.blmatrix;
-import bindbc.blend2d.bind.blpath;
-import bindbc.blend2d.bind.blrgba;
-import bindbc.blend2d.bind.blregion;
-import bindbc.blend2d.bind.blvariant;
+import bindbc.blend2d.bind.api;
+import bindbc.blend2d.bind.array;
+import bindbc.blend2d.bind.font;
+import bindbc.blend2d.bind.fontdefs;
+import bindbc.blend2d.bind.geometry;
+import bindbc.blend2d.bind.image;
+import bindbc.blend2d.bind.matrix;
+import bindbc.blend2d.bind.path;
+import bindbc.blend2d.bind.rgba;
+import bindbc.blend2d.bind.region;
+import bindbc.blend2d.bind.variant;
 
 //extern (System):
 

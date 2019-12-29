@@ -3,9 +3,9 @@
 //
 // [License]
 // Zlib - See LICENSE.md file in the package.
-module bindbc.blend2d.bind.blmatrix;
+module bindbc.blend2d.bind.matrix;
 
-import bindbc.blend2d.bind.blgeometry;
+import bindbc.blend2d.bind.geometry;
 
 //extern (System):
 

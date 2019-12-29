@@ -3,11 +3,11 @@
 //
 // [License]
 // Zlib - See LICENSE.md file in the package.
-module bindbc.blend2d.bind.blpath;
+module bindbc.blend2d.bind.path;
 
-import bindbc.blend2d.bind.blarray;
-import bindbc.blend2d.bind.blgeometry;
-import bindbc.blend2d.bind.blvariant;
+import bindbc.blend2d.bind.array;
+import bindbc.blend2d.bind.geometry;
+import bindbc.blend2d.bind.variant;
 
 //extern (System):
 

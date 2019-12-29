@@ -1,28 +1,28 @@
 // [Blend2D]
-module bindbc.blend2d.bind.blapi;
+module bindbc.blend2d.bind.api;
 
 import core.stdc.stddef;
 import core.stdc.string;
 import core.stdc.stdint;
 import core.stdc.stdarg;
 
-import bindbc.blend2d.bind.blpath;
-import bindbc.blend2d.bind.blgeometry;
-import bindbc.blend2d.bind.blarray;
-import bindbc.blend2d.bind.blcontext;
-import bindbc.blend2d.bind.blimage;
-import bindbc.blend2d.bind.blmatrix;
-import bindbc.blend2d.bind.blfont;
-import bindbc.blend2d.bind.blfontdefs;
-import bindbc.blend2d.bind.blfilesystem;
-import bindbc.blend2d.bind.blglyphbuffer;
-import bindbc.blend2d.bind.blformat;
-import bindbc.blend2d.bind.blgradient;
-import bindbc.blend2d.bind.blpattern;
-import bindbc.blend2d.bind.blpixelconverter;
-import bindbc.blend2d.bind.blrandom;
-import bindbc.blend2d.bind.blregion;
-import bindbc.blend2d.bind.blstring;
+import bindbc.blend2d.bind.path;
+import bindbc.blend2d.bind.geometry;
+import bindbc.blend2d.bind.array;
+import bindbc.blend2d.bind.context;
+import bindbc.blend2d.bind.image;
+import bindbc.blend2d.bind.matrix;
+import bindbc.blend2d.bind.font;
+import bindbc.blend2d.bind.fontdefs;
+import bindbc.blend2d.bind.filesystem;
+import bindbc.blend2d.bind.glyphbuffer;
+import bindbc.blend2d.bind.format;
+import bindbc.blend2d.bind.gradient;
+import bindbc.blend2d.bind.pattern;
+import bindbc.blend2d.bind.pixelconverter;
+import bindbc.blend2d.bind.random;
+import bindbc.blend2d.bind.region;
+import bindbc.blend2d.bind.string;
 
 //extern (System):
 
@@ -507,9 +507,10 @@ enum BLBooleanOp {
     BL_BOOLEAN_OP_OR = 2,
     //! Result = A ^ B.
     BL_BOOLEAN_OP_XOR = 3,
-    //! Result = A - B.
+    //! Result = A & ~B.
     BL_BOOLEAN_OP_SUB = 4,
 
+    //! Count of boolean operations.
     BL_BOOLEAN_OP_COUNT = 5
 }
 

@@ -3,12 +3,12 @@
 //
 // [License]
 // Zlib - See LICENSE.md file in the package.
-module bindbc.blend2d.bind.blvariant;
+module bindbc.blend2d.bind.variant;
 
 import core.stdc.string;
 import core.stdc.stdint;
 
-import bindbc.blend2d.bind.blapi;
+import bindbc.blend2d.bind.api;
 
 extern(System) :
 

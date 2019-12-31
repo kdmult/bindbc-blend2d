@@ -1,4 +1,3 @@
-lib
 dub.selections.json
 .dub
 .vs
@@ -8,6 +7,9 @@ dub.selections.json
 *.7z
 *.lib
 *.exp
-*.dll
 *.exe
-
+*.dll
+/bin/*
+!/bin/blend2d.dll
+/lib/*
+!/lib/blend2d.lib

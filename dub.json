@@ -1,0 +1,50 @@
+{
+    "name": "bindbc-blend2d",
+    "description": "Dynamic and static bindings to the Blend2D C API, compatible with -betterC, @nogc, and nothrow.",
+    "authors": ["kdmult"],
+    "license": "BSL-1.0",
+
+    "targetType": "staticLibrary",
+    "targetPath": "lib",
+    "targetName": "BindBC_Blend2D",
+
+    "subPackages": [
+        "./samples/bl_capi_sample/",
+    ],
+
+    "configurations": [
+        {
+            "name": "dynamic",
+            "versions": ["BindBlend2D_Dynamic"],
+            "dependencies": {
+                "bindbc-loader": "~>0.2.1"
+            }
+        },
+        {
+            "name": "dynamicBC",
+            "versions": ["BindBlend2D_Dynamic"],
+            "dependencies": {
+                "bindbc-loader": "~>0.2.1"
+            },
+            "subConfigurations": {
+                "bindbc-loader": "yesBC"
+            },
+            "dflags": ["-betterC"]
+        },
+        {
+            "name": "static",
+            "versions": ["BindBlend2D_Static"],
+            "excludedSourceFiles": [
+                "source/bindbc/blend2d/binddynamic.d"
+            ]
+        },
+        {
+            "name": "staticBC",
+            "versions": ["BindBlend2D_Static"],
+            "excludedSourceFiles": [
+                "source/bindbc/blend2d/binddynamic.d"
+            ],
+            "dflags": ["-betterC"]
+        },
+    ]
+}

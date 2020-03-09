@@ -24,16 +24,16 @@ int main() {
     BLContextCore ctx;
     BLGradientCore gradient;
 
-    r = blImageInitAs(&img, 256, 256, BLFormat.BL_FORMAT_PRGB32);
-    if (r != BLResultCode.BL_SUCCESS)
+    r = blImageInitAs(&img, 256, 256, BL_FORMAT_PRGB32);
+    if (r != BL_SUCCESS)
         return 1;
 
     r = blContextInitAs(&ctx, &img, null);
-    if (r != BLResultCode.BL_SUCCESS)
+    if (r != BL_SUCCESS)
         return 1;
 
     BLLinearGradientValues values = { 0, 0, 256, 256 };
-    r = blGradientInitAs(&gradient, BLGradientType.BL_GRADIENT_TYPE_LINEAR, &values, BLExtendMode.BL_EXTEND_MODE_PAD, null, 0, null);
+    r = blGradientInitAs(&gradient, BL_GRADIENT_TYPE_LINEAR, &values, BL_EXTEND_MODE_PAD, null, 0, null);
     if (r != BLResultCode.BL_SUCCESS)
         return 1;
 
@@ -50,9 +50,9 @@ int main() {
     circle.cy = 128;
     circle.r = 64;
 
-    blContextSetCompOp(&ctx, BLCompOp.BL_COMP_OP_EXCLUSION);
+    blContextSetCompOp(&ctx, BL_COMP_OP_EXCLUSION);
     blContextSetFillStyleRgba32(&ctx, 0xFF00FFFFU);
-    blContextFillGeometry(&ctx, BLGeometryType.BL_GEOMETRY_TYPE_CIRCLE, &circle);
+    blContextFillGeometry(&ctx, BL_GEOMETRY_TYPE_CIRCLE, &circle);
 
     blContextEnd(&ctx);
 

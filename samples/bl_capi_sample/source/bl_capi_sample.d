@@ -34,7 +34,7 @@ int main() {
 
     BLLinearGradientValues values = { 0, 0, 256, 256 };
     r = blGradientInitAs(&gradient, BL_GRADIENT_TYPE_LINEAR, &values, BL_EXTEND_MODE_PAD, null, 0, null);
-    if (r != BLResultCode.BL_SUCCESS)
+    if (r != BL_SUCCESS)
         return 1;
 
     blGradientAddStopRgba32(&gradient, 0.0, 0xFFFFFFFFU);

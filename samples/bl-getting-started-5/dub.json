@@ -1,0 +1,44 @@
+{
+    "name": "bl-getting-started-5",
+    "targetType": "executable",
+
+    "targetPath": "$PACKAGE_DIR/../../bin/",
+
+    "libs": [
+        "$PACKAGE_DIR/../../lib/blend2d"
+    ],
+
+    "dependencies": {
+        "bindbc-blend2d" : { "path" : "../../" }
+    },
+
+    "configurations" : [
+        {
+            "name" : "dynamic",
+            "subConfigurations" : {
+                "bindbc-blend2d": "dynamic"
+            }
+        }, 
+        {
+            "name" : "dynamicBC",
+            "subConfigurations" : {
+                "bindbc-blend2d": "dynamicBC"
+            },
+            "dflags": ["-betterC"]
+        }, 
+        {
+            "name" : "static",
+            "subConfigurations" : {
+                "bindbc-blend2d": "static"
+            }
+        },
+        {
+            "name" : "staticBC",
+            "subConfigurations" : {
+                "bindbc-blend2d": "staticBC"
+            },
+            "dflags": ["-betterC"]
+        }
+    ]
+
+}

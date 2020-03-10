@@ -1,5 +1,5 @@
 {
-    "name": "bl_capi_sample",
+    "name": "bl-capi-sample",
     "targetType": "executable",
 
     "targetPath": "$PACKAGE_DIR/../../bin/",

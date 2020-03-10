@@ -9,7 +9,8 @@
     "targetName": "BindBC_Blend2D",
 
     "subPackages": [
-        "./samples/bl_capi_sample/",
+        "./samples/bl-capi-sample/",
+        "./samples/bl-getting-started-5/",
     ],
 
     "configurations": [

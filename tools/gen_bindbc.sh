@@ -155,12 +155,12 @@ Blend2DSupport loadBlend2D()
         const(char)[][1] libNames = ["blend2d.dll"];
     }
     else version(OSX) {
-        const(char)[][2] libNames = [
+        const(char)[][1] libNames = [
             "blend2d.dylib"
         ];
     }
     else version(Posix) {
-        const(char)[][4] libNames = [
+        const(char)[][1] libNames = [
             "blend2d.so"
         ];
     }

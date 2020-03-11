@@ -4,8 +4,11 @@
 
     "targetPath": "$PACKAGE_DIR/../../bin/",
 
-    "libs": [
+    "libs-windows": [
         "$PACKAGE_DIR/../../lib/blend2d"
+    ],
+    "libs-linux": [
+        "$PACKAGE_DIR/../../lib/libblend2d.a"
     ],
 
     "dependencies": {

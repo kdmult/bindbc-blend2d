@@ -6,13 +6,13 @@ int main() {
     version(BindBlend2D_Dynamic) {
         Blend2DSupport ret = loadBlend2D();
         if (ret != blend2dSupport) {
-            import std.stdio;
+            import core.stdc.stdio : printf;
 
             if (ret == Blend2DSupport.noLibrary) {
-                writeln("Blend2D: Shared library failed to load");
+                printf("Blend2D: Shared library failed to load\n");
             }
             else if (Blend2DSupport.badLibrary) {
-                writeln("Blend2D: One or more symbols failed to load");
+                printf("Blend2D: One or more symbols failed to load\n");
             }
 
             return 1;

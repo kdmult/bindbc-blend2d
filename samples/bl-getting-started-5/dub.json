@@ -1,19 +1,14 @@
 {
     "name": "bl-getting-started-5",
+
+    "targetPath": "../../bin",
     "targetType": "executable",
 
-    "targetPath": "$PACKAGE_DIR/../../bin/",
-
-    "libs-windows": [
-        "$PACKAGE_DIR/../../lib/blend2d"
-    ],
-    "libs-linux": [
-        "$PACKAGE_DIR/../../lib/libblend2d.a"
-    ],
-
     "dependencies": {
-        "bindbc-blend2d" : { "path" : "../../" }
+        "bindbc-blend2d" : { "path" : "../.." }
     },
+
+    "libs": [ "$PACKAGE_DIR/../../lib/blend2d" ],
 
     "configurations" : [
         {
@@ -43,5 +38,4 @@
             "dflags": ["-betterC"]
         }
     ]
-
 }

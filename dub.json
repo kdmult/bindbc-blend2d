@@ -12,6 +12,8 @@
         "samples/bl-getting-started-5",
     ],
 
+    "libs": [ "blend2d" ],
+
     "configurations": [
         {
             "name": "dynamic",

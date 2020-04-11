@@ -61,6 +61,12 @@ EOL
   cat api.tmp api.d.tmp > "${bindstatic_d}"
   rm *.tmp
 
+  sed -E -i "s/^(BLResult blResultFromWinError.+;)/\/\/\1/" "${bindstatic_d}"
+  sed -E -i "s/^(BLResult blResultFromPosixError.+;)/\/\/\1/" "${bindstatic_d}"
+
+  echo -e "\nversion(BindBlend2D_Static) version(Windows) BLResult blResultFromWinError(uint e);" >>"${bindstatic_d}"
+  echo -e "version(BindBlend2D_Static) version(Posix) BLResult blResultFromPosixError(int e);" >>"${bindstatic_d}"
+
   popd
 }
 
@@ -78,7 +84,7 @@ function grep_pfn
   done
 
   fn_def=$(grep " $fn(" ${bindstatic_d} | tr -d "\r" | cut -d':' -f2)
-  echo "extern(C) alias p$pfn = ${fn_def/$fn/function}" >> "${binddynamic_d}"
+  echo "extern(C) @nogc nothrow alias p$pfn = ${fn_def/$fn/function}" >> "${binddynamic_d}"
   echo "__gshared p$pfn $fn;" >> "${binddynamic_d}"
   echo "" >> "${binddynamic_d}"
   echo "    lib.bindSymbol_stdcall($fn, \"$pfn\");" >> "${bindstatic_load_d}"
@@ -102,21 +108,29 @@ import bindbc.loader;
 import bindbc.blend2d.types;
 import bindbc.blend2d.bindstatic;
 
-extern(C) alias pblDefaultApproximationOptions = const BLApproximationOptions;
+extern(C) @nogc nothrow alias pblDefaultApproximationOptions = const BLApproximationOptions;
 __gshared pblDefaultApproximationOptions blDefaultApproximationOptions;
 
-extern(C) alias pblFormatInfo = const(BLFormatInfo)[BL_FORMAT_RESERVED_COUNT];
+extern(C) @nogc nothrow alias pblFormatInfo = const(BLFormatInfo)[BL_FORMAT_RESERVED_COUNT];
 __gshared pblFormatInfo blFormatInfo;
 
-extern(C) alias pblMatrix2DMapPointDArrayFuncs = BLMapPointDArrayFunc[BL_MATRIX2D_TYPE_COUNT];
+extern(C) @nogc nothrow alias pblMatrix2DMapPointDArrayFuncs = BLMapPointDArrayFunc[BL_MATRIX2D_TYPE_COUNT];
 __gshared pblMatrix2DMapPointDArrayFuncs blMatrix2DMapPointDArrayFuncs;
 
-extern(C) alias pblNone = BLVariantCore[BL_IMPL_TYPE_COUNT];
+extern(C) @nogc nothrow alias pblNone = BLVariantCore[BL_IMPL_TYPE_COUNT];
 __gshared pblNone blNone;
 
-extern(C) alias pblPixelConverterConvert = BLResult function(const(BLPixelConverterCore)* self, void* dstData, intptr_t dstStride, const(void)* srcData, intptr_t srcStride, uint w, uint h, const(BLPixelConverterOptions)* options);
+extern(C) @nogc nothrow alias pblPixelConverterConvert = BLResult function(const(BLPixelConverterCore)* self, void* dstData, intptr_t dstStride, const(void)* srcData, intptr_t srcStride, uint w, uint h, const(BLPixelConverterOptions)* options);
 __gshared pblPixelConverterConvert blPixelConverterConvert;
 
+version(Windows) {
+    extern(C) @nogc nothrow alias pblResultFromWinError = BLResult function(uint e);
+    __gshared pblResultFromWinError blResultFromWinError;
+}
+version(Posix) {
+    extern(C) @nogc nothrow alias pblResultFromPosixError = BLResult function(int e);
+    __gshared pblResultFromPosixError blResultFromPosixError;
+}
 
 EOL
 
@@ -191,6 +205,9 @@ Blend2DSupport loadBlend2D(const(char)* libName)
 
     lib.bindSymbol_stdcall(blPixelConverterConvert, "blPixelConverterConvert");
 
+    version(Windows) lib.bindSymbol_stdcall(blResultFromWinError, "blResultFromWinError");
+    version(Posix) lib.bindSymbol_stdcall(blResultFromPosixError, "blResultFromPosixError");
+
 EOL
 
   cat "${bindstatic_load_d}" >> "${binddynamic_d}"
@@ -208,13 +225,13 @@ EOL
 }
 
 blend2d_repo_src=${blend2d_dir}/src/blend2d
-functions="`pwd`/functions.txt"
+symbols="`pwd`/symbols.txt"
 
 gen_bindstatic "${blend2d_repo_src}"
 
-gen_binddynamic "${functions}"
+gen_binddynamic "${symbols}"
 
-for line in $(cat "${functions}"); do
+for line in $(cat "${symbols}"); do
   fn=$(echo "$line" | tr -d "\r")
   sed -E -i "s/^(.* ${fn}\()/version(BindBlend2D_Static) \1/" "${bindstatic_d}"
 done

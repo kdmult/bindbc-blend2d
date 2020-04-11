@@ -552,7 +552,9 @@ version(BindBlend2D_Static) BLResult blContextInitAs(BLContextCore* self, BLImag
 version(BindBlend2D_Static) BLResult blContextReset(BLContextCore* self);
 version(BindBlend2D_Static) BLResult blContextAssignMove(BLContextCore* self, BLContextCore* other);
 version(BindBlend2D_Static) BLResult blContextAssignWeak(BLContextCore* self, const(BLContextCore)* other);
-version(BindBlend2D_Static) BLResult blContextGetType(const(BLContextCore)* self);
+version(BindBlend2D_Static) uint blContextGetType(const(BLContextCore)* self);
+version(BindBlend2D_Static) BLResult blContextGetTargetSize(const(BLContextCore)* self, BLSize* targetSizeOut);
+version(BindBlend2D_Static) BLImageCore* blContextGetTargetImage(const(BLContextCore)* self);
 version(BindBlend2D_Static) BLResult blContextBegin(BLContextCore* self, BLImageCore* image, const(BLContextCreateInfo)* options);
 version(BindBlend2D_Static) BLResult blContextEnd(BLContextCore* self);
 version(BindBlend2D_Static) BLResult blContextFlush(BLContextCore* self, uint flags);
@@ -826,6 +828,7 @@ version(BindBlend2D_Static) BLResult blPathAddTranslatedPath(BLPathCore* self, c
 version(BindBlend2D_Static) BLResult blPathAddTransformedPath(BLPathCore* self, const(BLPathCore)* other, const(BLRange)* range, const(BLMatrix2D)* m);
 version(BindBlend2D_Static) BLResult blPathAddReversedPath(BLPathCore* self, const(BLPathCore)* other, const(BLRange)* range, uint reverseMode);
 version(BindBlend2D_Static) BLResult blPathAddStrokedPath(BLPathCore* self, const(BLPathCore)* other, const(BLRange)* range, const(BLStrokeOptionsCore)* options, const(BLApproximationOptions)* approx);
+version(BindBlend2D_Static) BLResult blPathRemoveRange(BLPathCore* self, const(BLRange)* range);
 version(BindBlend2D_Static) BLResult blPathTranslate(BLPathCore* self, const(BLRange)* range, const(BLPoint)* p);
 version(BindBlend2D_Static) BLResult blPathTransform(BLPathCore* self, const(BLRange)* range, const(BLMatrix2D)* m);
 version(BindBlend2D_Static) BLResult blPathFitTo(BLPathCore* self, const(BLRange)* range, const(BLRect)* rect, uint fitFlags);
@@ -910,7 +913,7 @@ version(BindBlend2D_Static) uint blRuntimeGetTickCount();
 
 version(BindBlend2D_Static) void blRuntimeAssertionFailure(const(char)* file, int line, const(char)* msg);
 
-version(BindBlend2D_Static) BLResult blResultFromWinError(uint e);
+//BLResult blResultFromWinError(uint e);
 
 version(BindBlend2D_Static) BLResult blStringInit(BLStringCore* self);
 version(BindBlend2D_Static) BLResult blStringReset(BLStringCore* self);
@@ -1177,6 +1180,10 @@ struct BLContextHints
 
 struct BLContextState
 {
+    BLImageCore targetImage;
+
+    BLSize targetSize;
+
     BLContextHints hints;
 
     ubyte compOp;
@@ -1288,8 +1295,6 @@ struct BLContextImpl
     ushort memPoolData;
 
     uint contextType;
-
-    BLSize targetSize;
 
     const(BLContextState)* state;
 }
@@ -3596,3 +3601,6 @@ struct BLVariantCore
 }
 
 extern __gshared BLVariantCore[BL_IMPL_TYPE_COUNT] blNone;
+
+version(BindBlend2D_Static) version(Windows) BLResult blResultFromWinError(uint e);
+version(BindBlend2D_Static) version(Posix) BLResult blResultFromPosixError(int e);

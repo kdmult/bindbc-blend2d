@@ -1,10 +1,10 @@
 blArrayAppendF32
 blArrayAppendF64
 blArrayAppendItem
-blArrayAppendU8
 blArrayAppendU16
 blArrayAppendU32
 blArrayAppendU64
+blArrayAppendU8
 blArrayAppendView
 blArrayAssignDeep
 blArrayAssignMove
@@ -21,10 +21,10 @@ blArrayInsertF32
 blArrayInsertF64
 blArrayInsertItem
 blArrayInsertOp
-blArrayInsertU8
 blArrayInsertU16
 blArrayInsertU32
 blArrayInsertU64
+blArrayInsertU8
 blArrayInsertView
 blArrayMakeMutable
 blArrayModifyOp
@@ -33,10 +33,10 @@ blArrayRemoveRange
 blArrayReplaceF32
 blArrayReplaceF64
 blArrayReplaceItem
-blArrayReplaceU8
 blArrayReplaceU16
 blArrayReplaceU32
 blArrayReplaceU64
+blArrayReplaceU8
 blArrayReplaceView
 blArrayReserve
 blArrayReset
@@ -73,6 +73,8 @@ blContextGetStrokeOptions
 blContextGetStrokeStyle
 blContextGetStrokeStyleRgba32
 blContextGetStrokeStyleRgba64
+blContextGetTargetImage
+blContextGetTargetSize
 blContextGetType
 blContextGetUserMatrix
 blContextInit
@@ -312,6 +314,7 @@ blPathModifyOp
 blPathMoveTo
 blPathPolyTo
 blPathQuadTo
+blPathRemoveRange
 blPathReserve
 blPathReset
 blPathSetVertexAt
@@ -368,7 +371,6 @@ blRegionReset
 blRegionShrink
 blRegionTranslate
 blRegionTranslateAndClip
-blResultFromWinError
 blRuntimeAllocImpl
 blRuntimeAssertionFailure
 blRuntimeCleanup

@@ -29,20 +29,21 @@ mixin(expandEnum!BLDataSourceType);
 mixin(expandEnum!BLModifyOp);
 mixin(expandEnum!BLBooleanOp);
 mixin(expandEnum!BLExtendMode);
-mixin(expandEnum!BLStyleType);
 mixin(expandEnum!BLTextEncoding);
 mixin(expandEnum!BLContextType);
 mixin(expandEnum!BLContextHint);
 mixin(expandEnum!BLContextOpType);
 mixin(expandEnum!BLContextFlushFlags);
 mixin(expandEnum!BLContextCreateFlags);
+mixin(expandEnum!BLContextProperty);
+mixin(expandEnum!BLContextErrorFlags);
 mixin(expandEnum!BLClipMode);
 mixin(expandEnum!BLCompOp);
 mixin(expandEnum!BLGradientQuality);
 mixin(expandEnum!BLPatternQuality);
 mixin(expandEnum!BLRenderingQuality);
 mixin(expandEnum!BLFileOpenFlags);
-mixin(expandEnum!BLFileSeek);
+mixin(expandEnum!BLFileSeekType);
 mixin(expandEnum!BLFileReadFlags);
 mixin(expandEnum!BLGlyphPlacementType);
 mixin(expandEnum!BLGlyphRunFlags);
@@ -90,6 +91,7 @@ mixin(expandEnum!BLRuntimeBuildType);
 mixin(expandEnum!BLRuntimeCpuArch);
 mixin(expandEnum!BLRuntimeCpuFeatures);
 mixin(expandEnum!BLRuntimeCleanupFlags);
+mixin(expandEnum!BLStyleType);
 mixin(expandEnum!BLImplType);
 mixin(expandEnum!BLImplTraits);
 import core.stdc.stddef;
@@ -124,7 +126,7 @@ extern (D) auto BL_MAKE_TAG(T0, T1, T2, T3)(auto ref T0 A, auto ref T1 B, auto r
 
 //struct BLRuntimeBuildInfo;
 //struct BLRuntimeSystemInfo;
-//struct BLRuntimeMemoryInfo;
+//struct BLRuntimeResourceInfo;
 
 //struct BLStringCore;
 //struct BLStringImpl;
@@ -184,7 +186,7 @@ extern (D) auto BL_MAKE_TAG(T0, T1, T2, T3)(auto ref T0 A, auto ref T1 B, auto r
 
 //struct BLRgba32;
 //struct BLRgba64;
-//struct BLRgba128;
+//struct BLRgba;
 
 //struct BLGradientCore;
 //struct BLGradientImpl;
@@ -196,6 +198,8 @@ extern (D) auto BL_MAKE_TAG(T0, T1, T2, T3)(auto ref T0 A, auto ref T1 B, auto r
 
 //struct BLPatternCore;
 //struct BLPatternImpl;
+
+//struct BLStyleCore;
 
 //struct BLContextCore;
 //struct BLContextImpl;
@@ -215,6 +219,7 @@ extern (D) auto BL_MAKE_TAG(T0, T1, T2, T3)(auto ref T0 A, auto ref T1 B, auto r
 
 //struct BLFontUnicodeCoverage;
 //struct BLFontFaceInfo;
+//struct BLFontQueryProperties;
 //struct BLFontFeature;
 //struct BLFontDesignMetrics;
 //struct BLFontMatrix;
@@ -245,6 +250,8 @@ alias BLResult = uint;
 alias BLBitWord = ulong;
 
 alias BLTag = uint;
+
+alias BLUniqueId = ulong;
 
 alias BLDestroyImplFunc = void function(void* impl, void* destroyData);
 
@@ -297,53 +304,56 @@ enum BLResultCode
     BL_ERROR_TOO_MANY_OPEN_FILES_BY_OS = 65571,
     BL_ERROR_TOO_MANY_LINKS = 65572,
     BL_ERROR_TOO_MANY_THREADS = 65573,
+    BL_ERROR_THREAD_POOL_EXHAUSTED = 65574,
 
-    BL_ERROR_FILE_EMPTY = 65574,
-    BL_ERROR_OPEN_FAILED = 65575,
-    BL_ERROR_NOT_ROOT_DEVICE = 65576,
+    BL_ERROR_FILE_EMPTY = 65575,
+    BL_ERROR_OPEN_FAILED = 65576,
+    BL_ERROR_NOT_ROOT_DEVICE = 65577,
 
-    BL_ERROR_UNKNOWN_SYSTEM_ERROR = 65577,
+    BL_ERROR_UNKNOWN_SYSTEM_ERROR = 65578,
 
-    BL_ERROR_INVALID_ALIGNMENT = 65578,
-    BL_ERROR_INVALID_SIGNATURE = 65579,
-    BL_ERROR_INVALID_DATA = 65580,
-    BL_ERROR_INVALID_STRING = 65581,
-    BL_ERROR_DATA_TRUNCATED = 65582,
-    BL_ERROR_DATA_TOO_LARGE = 65583,
-    BL_ERROR_DECOMPRESSION_FAILED = 65584,
+    BL_ERROR_INVALID_ALIGNMENT = 65579,
+    BL_ERROR_INVALID_SIGNATURE = 65580,
+    BL_ERROR_INVALID_DATA = 65581,
+    BL_ERROR_INVALID_STRING = 65582,
+    BL_ERROR_DATA_TRUNCATED = 65583,
+    BL_ERROR_DATA_TOO_LARGE = 65584,
+    BL_ERROR_DECOMPRESSION_FAILED = 65585,
 
-    BL_ERROR_INVALID_GEOMETRY = 65585,
-    BL_ERROR_NO_MATCHING_VERTEX = 65586,
+    BL_ERROR_INVALID_GEOMETRY = 65586,
+    BL_ERROR_NO_MATCHING_VERTEX = 65587,
 
-    BL_ERROR_NO_MATCHING_COOKIE = 65587,
-    BL_ERROR_NO_STATES_TO_RESTORE = 65588,
+    BL_ERROR_NO_MATCHING_COOKIE = 65588,
+    BL_ERROR_NO_STATES_TO_RESTORE = 65589,
 
-    BL_ERROR_IMAGE_TOO_LARGE = 65589,
-    BL_ERROR_IMAGE_NO_MATCHING_CODEC = 65590,
-    BL_ERROR_IMAGE_UNKNOWN_FILE_FORMAT = 65591,
-    BL_ERROR_IMAGE_DECODER_NOT_PROVIDED = 65592,
-    BL_ERROR_IMAGE_ENCODER_NOT_PROVIDED = 65593,
+    BL_ERROR_IMAGE_TOO_LARGE = 65590,
+    BL_ERROR_IMAGE_NO_MATCHING_CODEC = 65591,
+    BL_ERROR_IMAGE_UNKNOWN_FILE_FORMAT = 65592,
+    BL_ERROR_IMAGE_DECODER_NOT_PROVIDED = 65593,
+    BL_ERROR_IMAGE_ENCODER_NOT_PROVIDED = 65594,
 
-    BL_ERROR_PNG_MULTIPLE_IHDR = 65594,
-    BL_ERROR_PNG_INVALID_IDAT = 65595,
-    BL_ERROR_PNG_INVALID_IEND = 65596,
-    BL_ERROR_PNG_INVALID_PLTE = 65597,
-    BL_ERROR_PNG_INVALID_TRNS = 65598,
-    BL_ERROR_PNG_INVALID_FILTER = 65599,
+    BL_ERROR_PNG_MULTIPLE_IHDR = 65595,
+    BL_ERROR_PNG_INVALID_IDAT = 65596,
+    BL_ERROR_PNG_INVALID_IEND = 65597,
+    BL_ERROR_PNG_INVALID_PLTE = 65598,
+    BL_ERROR_PNG_INVALID_TRNS = 65599,
+    BL_ERROR_PNG_INVALID_FILTER = 65600,
 
-    BL_ERROR_JPEG_UNSUPPORTED_FEATURE = 65600,
-    BL_ERROR_JPEG_INVALID_SOS = 65601,
-    BL_ERROR_JPEG_INVALID_SOF = 65602,
-    BL_ERROR_JPEG_MULTIPLE_SOF = 65603,
-    BL_ERROR_JPEG_UNSUPPORTED_SOF = 65604,
+    BL_ERROR_JPEG_UNSUPPORTED_FEATURE = 65601,
+    BL_ERROR_JPEG_INVALID_SOS = 65602,
+    BL_ERROR_JPEG_INVALID_SOF = 65603,
+    BL_ERROR_JPEG_MULTIPLE_SOF = 65604,
+    BL_ERROR_JPEG_UNSUPPORTED_SOF = 65605,
 
-    BL_ERROR_FONT_NO_CHARACTER_MAPPING = 65605,
-    BL_ERROR_FONT_MISSING_IMPORTANT_TABLE = 65606,
-    BL_ERROR_FONT_FEATURE_NOT_AVAILABLE = 65607,
-    BL_ERROR_FONT_CFF_INVALID_DATA = 65608,
-    BL_ERROR_FONT_PROGRAM_TERMINATED = 65609,
+    BL_ERROR_FONT_NOT_INITIALIZED = 65606,
+    BL_ERROR_FONT_NO_MATCH = 65607,
+    BL_ERROR_FONT_NO_CHARACTER_MAPPING = 65608,
+    BL_ERROR_FONT_MISSING_IMPORTANT_TABLE = 65609,
+    BL_ERROR_FONT_FEATURE_NOT_AVAILABLE = 65610,
+    BL_ERROR_FONT_CFF_INVALID_DATA = 65611,
+    BL_ERROR_FONT_PROGRAM_TERMINATED = 65612,
 
-    BL_ERROR_INVALID_GLYPH = 65610
+    BL_ERROR_INVALID_GLYPH = 65613
 }
 
 enum BLByteOrder
@@ -438,19 +448,6 @@ enum BLExtendMode
     BL_EXTEND_MODE_COMPLEX_COUNT = 9
 }
 
-enum BLStyleType
-{
-    BL_STYLE_TYPE_NONE = 0,
-
-    BL_STYLE_TYPE_SOLID = 1,
-
-    BL_STYLE_TYPE_PATTERN = 2,
-
-    BL_STYLE_TYPE_GRADIENT = 3,
-
-    BL_STYLE_TYPE_COUNT = 4
-}
-
 enum BLTextEncoding
 {
     BL_TEXT_ENCODING_UTF8 = 0,
@@ -503,6 +500,7 @@ struct BLRegionView
 alias BLDataView = BLArrayView;
 
 version(BindBlend2D_Static) BLResult blArrayInit(BLArrayCore* self, uint arrayTypeId);
+version(BindBlend2D_Static) BLResult blArrayDestroy(BLArrayCore* self);
 version(BindBlend2D_Static) BLResult blArrayReset(BLArrayCore* self);
 version(BindBlend2D_Static) BLResult blArrayCreateFromData(BLArrayCore* self, void* data, size_t size, size_t capacity, uint dataAccessFlags, BLDestroyImplFunc destroyFunc, void* destroyData);
 version(BindBlend2D_Static) size_t blArrayGetSize(const(BLArrayCore)* self);
@@ -549,6 +547,7 @@ version(BindBlend2D_Static) bool blArrayEquals(const(BLArrayCore)* a, const(BLAr
 
 version(BindBlend2D_Static) BLResult blContextInit(BLContextCore* self);
 version(BindBlend2D_Static) BLResult blContextInitAs(BLContextCore* self, BLImageCore* image, const(BLContextCreateInfo)* options);
+version(BindBlend2D_Static) BLResult blContextDestroy(BLContextCore* self);
 version(BindBlend2D_Static) BLResult blContextReset(BLContextCore* self);
 version(BindBlend2D_Static) BLResult blContextAssignMove(BLContextCore* self, BLContextCore* other);
 version(BindBlend2D_Static) BLResult blContextAssignWeak(BLContextCore* self, const(BLContextCore)* other);
@@ -558,6 +557,7 @@ version(BindBlend2D_Static) BLImageCore* blContextGetTargetImage(const(BLContext
 version(BindBlend2D_Static) BLResult blContextBegin(BLContextCore* self, BLImageCore* image, const(BLContextCreateInfo)* options);
 version(BindBlend2D_Static) BLResult blContextEnd(BLContextCore* self);
 version(BindBlend2D_Static) BLResult blContextFlush(BLContextCore* self, uint flags);
+version(BindBlend2D_Static) BLResult blContextQueryProperty(const(BLContextCore)* self, uint propertyId, void* valueOut);
 version(BindBlend2D_Static) BLResult blContextSave(BLContextCore* self, BLContextCookie* cookie);
 version(BindBlend2D_Static) BLResult blContextRestore(BLContextCore* self, const(BLContextCookie)* cookie);
 version(BindBlend2D_Static) BLResult blContextGetMetaMatrix(const(BLContextCore)* self, BLMatrix2D* m);
@@ -572,20 +572,20 @@ version(BindBlend2D_Static) BLResult blContextSetApproximationOptions(BLContextC
 version(BindBlend2D_Static) BLResult blContextSetCompOp(BLContextCore* self, uint compOp);
 version(BindBlend2D_Static) BLResult blContextSetGlobalAlpha(BLContextCore* self, double alpha);
 version(BindBlend2D_Static) BLResult blContextSetFillAlpha(BLContextCore* self, double alpha);
-version(BindBlend2D_Static) BLResult blContextGetFillStyle(const(BLContextCore)* self, void* object);
-version(BindBlend2D_Static) BLResult blContextGetFillStyleRgba32(const(BLContextCore)* self, uint* rgba32);
-version(BindBlend2D_Static) BLResult blContextGetFillStyleRgba64(const(BLContextCore)* self, ulong* rgba64);
-version(BindBlend2D_Static) BLResult blContextSetFillStyle(BLContextCore* self, const(void)* object);
+version(BindBlend2D_Static) BLResult blContextGetFillStyle(const(BLContextCore)* self, BLStyleCore* styleOut);
+version(BindBlend2D_Static) BLResult blContextSetFillStyle(BLContextCore* self, const(BLStyleCore)* style);
+version(BindBlend2D_Static) BLResult blContextSetFillStyleRgba(BLContextCore* self, const(BLRgba)* rgba);
 version(BindBlend2D_Static) BLResult blContextSetFillStyleRgba32(BLContextCore* self, uint rgba32);
 version(BindBlend2D_Static) BLResult blContextSetFillStyleRgba64(BLContextCore* self, ulong rgba64);
+version(BindBlend2D_Static) BLResult blContextSetFillStyleObject(BLContextCore* self, const(void)* object);
 version(BindBlend2D_Static) BLResult blContextSetFillRule(BLContextCore* self, uint fillRule);
 version(BindBlend2D_Static) BLResult blContextSetStrokeAlpha(BLContextCore* self, double alpha);
-version(BindBlend2D_Static) BLResult blContextGetStrokeStyle(const(BLContextCore)* self, void* object);
-version(BindBlend2D_Static) BLResult blContextGetStrokeStyleRgba32(const(BLContextCore)* self, uint* rgba32);
-version(BindBlend2D_Static) BLResult blContextGetStrokeStyleRgba64(const(BLContextCore)* self, ulong* rgba64);
-version(BindBlend2D_Static) BLResult blContextSetStrokeStyle(BLContextCore* self, const(void)* object);
+version(BindBlend2D_Static) BLResult blContextGetStrokeStyle(const(BLContextCore)* self, BLStyleCore* styleOut);
+version(BindBlend2D_Static) BLResult blContextSetStrokeStyle(BLContextCore* self, const(BLStyleCore)* style);
+version(BindBlend2D_Static) BLResult blContextSetStrokeStyleRgba(BLContextCore* self, const(BLRgba)* rgba);
 version(BindBlend2D_Static) BLResult blContextSetStrokeStyleRgba32(BLContextCore* self, uint rgba32);
 version(BindBlend2D_Static) BLResult blContextSetStrokeStyleRgba64(BLContextCore* self, ulong rgba64);
+version(BindBlend2D_Static) BLResult blContextSetStrokeStyleObject(BLContextCore* self, const(void)* object);
 version(BindBlend2D_Static) BLResult blContextSetStrokeWidth(BLContextCore* self, double width);
 version(BindBlend2D_Static) BLResult blContextSetStrokeMiterLimit(BLContextCore* self, double miterLimit);
 version(BindBlend2D_Static) BLResult blContextSetStrokeCap(BLContextCore* self, uint position, uint strokeCap);
@@ -638,6 +638,7 @@ version(BindBlend2D_Static) BLResult blFileSystemReadFile(const(char)* fileName,
 version(BindBlend2D_Static) BLResult blFileSystemWriteFile(const(char)* fileName, const(void)* data, size_t size, size_t* bytesWrittenOut);
 
 version(BindBlend2D_Static) BLResult blFontInit(BLFontCore* self);
+version(BindBlend2D_Static) BLResult blFontDestroy(BLFontCore* self);
 version(BindBlend2D_Static) BLResult blFontReset(BLFontCore* self);
 version(BindBlend2D_Static) BLResult blFontAssignMove(BLFontCore* self, BLFontCore* other);
 version(BindBlend2D_Static) BLResult blFontAssignWeak(BLFontCore* self, const(BLFontCore)* other);
@@ -659,6 +660,7 @@ version(BindBlend2D_Static) BLResult blFontGetGlyphOutlines(const(BLFontCore)* s
 version(BindBlend2D_Static) BLResult blFontGetGlyphRunOutlines(const(BLFontCore)* self, const(BLGlyphRun)* glyphRun, const(BLMatrix2D)* userMatrix, BLPathCore* out_, BLPathSinkFunc sink, void* closure);
 
 version(BindBlend2D_Static) BLResult blFontDataInit(BLFontDataCore* self);
+version(BindBlend2D_Static) BLResult blFontDataDestroy(BLFontDataCore* self);
 version(BindBlend2D_Static) BLResult blFontDataReset(BLFontDataCore* self);
 version(BindBlend2D_Static) BLResult blFontDataAssignMove(BLFontDataCore* self, BLFontDataCore* other);
 version(BindBlend2D_Static) BLResult blFontDataAssignWeak(BLFontDataCore* self, const(BLFontDataCore)* other);
@@ -670,6 +672,7 @@ version(BindBlend2D_Static) BLResult blFontDataListTags(const(BLFontDataCore)* s
 version(BindBlend2D_Static) size_t blFontDataQueryTables(const(BLFontDataCore)* self, uint faceIndex, BLFontTable* dst, const(BLTag)* tags, size_t count);
 
 version(BindBlend2D_Static) BLResult blFontFaceInit(BLFontFaceCore* self);
+version(BindBlend2D_Static) BLResult blFontFaceDestroy(BLFontFaceCore* self);
 version(BindBlend2D_Static) BLResult blFontFaceReset(BLFontFaceCore* self);
 version(BindBlend2D_Static) BLResult blFontFaceAssignMove(BLFontFaceCore* self, BLFontFaceCore* other);
 version(BindBlend2D_Static) BLResult blFontFaceAssignWeak(BLFontFaceCore* self, const(BLFontFaceCore)* other);
@@ -681,9 +684,18 @@ version(BindBlend2D_Static) BLResult blFontFaceGetDesignMetrics(const(BLFontFace
 version(BindBlend2D_Static) BLResult blFontFaceGetUnicodeCoverage(const(BLFontFaceCore)* self, BLFontUnicodeCoverage* out_);
 
 version(BindBlend2D_Static) BLResult blFontManagerInit(BLFontManagerCore* self);
+version(BindBlend2D_Static) BLResult blFontManagerInitNew(BLFontManagerCore* self);
+version(BindBlend2D_Static) BLResult blFontManagerDestroy(BLFontManagerCore* self);
 version(BindBlend2D_Static) BLResult blFontManagerReset(BLFontManagerCore* self);
 version(BindBlend2D_Static) BLResult blFontManagerAssignMove(BLFontManagerCore* self, BLFontManagerCore* other);
 version(BindBlend2D_Static) BLResult blFontManagerAssignWeak(BLFontManagerCore* self, const(BLFontManagerCore)* other);
+version(BindBlend2D_Static) BLResult blFontManagerCreate(BLFontManagerCore* self);
+version(BindBlend2D_Static) BLResult blFontManagerGetFaceCount(const(BLFontManagerCore)* self);
+version(BindBlend2D_Static) BLResult blFontManagerGetFamilyCount(const(BLFontManagerCore)* self);
+version(BindBlend2D_Static) bool blFontManagerHasFace(const(BLFontManagerCore)* self, const(BLFontFaceCore)* face);
+version(BindBlend2D_Static) BLResult blFontManagerAddFace(BLFontManagerCore* self, const(BLFontFaceCore)* face);
+version(BindBlend2D_Static) BLResult blFontManagerQueryFace(const(BLFontManagerCore)* self, const(char)* name, size_t nameSize, const(BLFontQueryProperties)* properties, BLFontFaceCore* out_);
+version(BindBlend2D_Static) BLResult blFontManagerQueryFacesByFamilyName(const(BLFontManagerCore)* self, const(char)* name, size_t nameSize, BLArrayCore* out_);
 version(BindBlend2D_Static) bool blFontManagerEquals(const(BLFontManagerCore)* a, const(BLFontManagerCore)* b);
 
 version(BindBlend2D_Static) BLResult blFormatInfoQuery(BLFormatInfo* self, uint format);
@@ -691,6 +703,7 @@ version(BindBlend2D_Static) BLResult blFormatInfoSanitize(BLFormatInfo* self);
 
 version(BindBlend2D_Static) BLResult blGlyphBufferInit(BLGlyphBufferCore* self);
 version(BindBlend2D_Static) BLResult blGlyphBufferInitMove(BLGlyphBufferCore* self, BLGlyphBufferCore* other);
+version(BindBlend2D_Static) BLResult blGlyphBufferDestroy(BLGlyphBufferCore* self);
 version(BindBlend2D_Static) BLResult blGlyphBufferReset(BLGlyphBufferCore* self);
 version(BindBlend2D_Static) BLResult blGlyphBufferClear(BLGlyphBufferCore* self);
 version(BindBlend2D_Static) size_t blGlyphBufferGetSize(const(BLGlyphBufferCore)* self);
@@ -705,6 +718,7 @@ version(BindBlend2D_Static) BLResult blGlyphBufferSetGlyphsFromStruct(BLGlyphBuf
 
 version(BindBlend2D_Static) BLResult blGradientInit(BLGradientCore* self);
 version(BindBlend2D_Static) BLResult blGradientInitAs(BLGradientCore* self, uint type, const(void)* values, uint extendMode, const(BLGradientStop)* stops, size_t n, const(BLMatrix2D)* m);
+version(BindBlend2D_Static) BLResult blGradientDestroy(BLGradientCore* self);
 version(BindBlend2D_Static) BLResult blGradientReset(BLGradientCore* self);
 version(BindBlend2D_Static) BLResult blGradientAssignMove(BLGradientCore* self, BLGradientCore* other);
 version(BindBlend2D_Static) BLResult blGradientAssignWeak(BLGradientCore* self, const(BLGradientCore)* other);
@@ -738,6 +752,7 @@ version(BindBlend2D_Static) bool blGradientEquals(const(BLGradientCore)* a, cons
 version(BindBlend2D_Static) BLResult blImageInit(BLImageCore* self);
 version(BindBlend2D_Static) BLResult blImageInitAs(BLImageCore* self, int w, int h, uint format);
 version(BindBlend2D_Static) BLResult blImageInitAsFromData(BLImageCore* self, int w, int h, uint format, void* pixelData, intptr_t stride, BLDestroyImplFunc destroyFunc, void* destroyData);
+version(BindBlend2D_Static) BLResult blImageDestroy(BLImageCore* self);
 version(BindBlend2D_Static) BLResult blImageReset(BLImageCore* self);
 version(BindBlend2D_Static) BLResult blImageAssignMove(BLImageCore* self, BLImageCore* other);
 version(BindBlend2D_Static) BLResult blImageAssignWeak(BLImageCore* self, const(BLImageCore)* other);
@@ -755,9 +770,11 @@ version(BindBlend2D_Static) BLResult blImageWriteToFile(const(BLImageCore)* self
 version(BindBlend2D_Static) BLResult blImageWriteToData(const(BLImageCore)* self, BLArrayCore* dst, const(BLImageCodecCore)* codec);
 
 version(BindBlend2D_Static) BLResult blImageCodecInit(BLImageCodecCore* self);
+version(BindBlend2D_Static) BLResult blImageCodecDestroy(BLImageCodecCore* self);
 version(BindBlend2D_Static) BLResult blImageCodecReset(BLImageCodecCore* self);
 version(BindBlend2D_Static) BLResult blImageCodecAssignWeak(BLImageCodecCore* self, const(BLImageCodecCore)* other);
 version(BindBlend2D_Static) BLResult blImageCodecFindByName(BLImageCodecCore* self, const(char)* name, size_t size, const(BLArrayCore)* codecs);
+version(BindBlend2D_Static) BLResult blImageCodecFindByExtension(BLImageCodecCore* self, const(char)* name, size_t size, const(BLArrayCore)* codecs);
 version(BindBlend2D_Static) BLResult blImageCodecFindByData(BLImageCodecCore* self, const(void)* data, size_t size, const(BLArrayCore)* codecs);
 version(BindBlend2D_Static) uint blImageCodecInspectData(const(BLImageCodecCore)* self, const(void)* data, size_t size);
 version(BindBlend2D_Static) BLResult blImageCodecCreateDecoder(const(BLImageCodecCore)* self, BLImageDecoderCore* dst);
@@ -769,6 +786,7 @@ version(BindBlend2D_Static) BLResult blImageCodecAddToBuiltIn(const(BLImageCodec
 version(BindBlend2D_Static) BLResult blImageCodecRemoveFromBuiltIn(const(BLImageCodecCore)* codec);
 
 version(BindBlend2D_Static) BLResult blImageDecoderInit(BLImageDecoderCore* self);
+version(BindBlend2D_Static) BLResult blImageDecoderDestroy(BLImageDecoderCore* self);
 version(BindBlend2D_Static) BLResult blImageDecoderReset(BLImageDecoderCore* self);
 version(BindBlend2D_Static) BLResult blImageDecoderAssignMove(BLImageDecoderCore* self, BLImageDecoderCore* other);
 version(BindBlend2D_Static) BLResult blImageDecoderAssignWeak(BLImageDecoderCore* self, const(BLImageDecoderCore)* other);
@@ -777,6 +795,7 @@ version(BindBlend2D_Static) BLResult blImageDecoderReadInfo(BLImageDecoderCore* 
 version(BindBlend2D_Static) BLResult blImageDecoderReadFrame(BLImageDecoderCore* self, BLImageCore* imageOut, const(ubyte)* data, size_t size);
 
 version(BindBlend2D_Static) BLResult blImageEncoderInit(BLImageEncoderCore* self);
+version(BindBlend2D_Static) BLResult blImageEncoderDestroy(BLImageEncoderCore* self);
 version(BindBlend2D_Static) BLResult blImageEncoderReset(BLImageEncoderCore* self);
 version(BindBlend2D_Static) BLResult blImageEncoderAssignMove(BLImageEncoderCore* self, BLImageEncoderCore* other);
 version(BindBlend2D_Static) BLResult blImageEncoderAssignWeak(BLImageEncoderCore* self, const(BLImageEncoderCore)* other);
@@ -794,6 +813,7 @@ version(BindBlend2D_Static) uint blMatrix2DGetType(const(BLMatrix2D)* self);
 version(BindBlend2D_Static) BLResult blMatrix2DMapPointDArray(const(BLMatrix2D)* self, BLPoint* dst, const(BLPoint)* src, size_t count);
 
 version(BindBlend2D_Static) BLResult blPathInit(BLPathCore* self);
+version(BindBlend2D_Static) BLResult blPathDestroy(BLPathCore* self);
 version(BindBlend2D_Static) BLResult blPathReset(BLPathCore* self);
 version(BindBlend2D_Static) size_t blPathGetSize(const(BLPathCore)* self);
 version(BindBlend2D_Static) size_t blPathGetCapacity(const(BLPathCore)* self);
@@ -843,6 +863,7 @@ version(BindBlend2D_Static) uint blPathHitTest(const(BLPathCore)* self, const(BL
 
 version(BindBlend2D_Static) BLResult blPatternInit(BLPatternCore* self);
 version(BindBlend2D_Static) BLResult blPatternInitAs(BLPatternCore* self, const(BLImageCore)* image, const(BLRectI)* area, uint extendMode, const(BLMatrix2D)* m);
+version(BindBlend2D_Static) BLResult blPatternDestroy(BLPatternCore* self);
 version(BindBlend2D_Static) BLResult blPatternReset(BLPatternCore* self);
 version(BindBlend2D_Static) BLResult blPatternAssignMove(BLPatternCore* self, BLPatternCore* other);
 version(BindBlend2D_Static) BLResult blPatternAssignWeak(BLPatternCore* self, const(BLPatternCore)* other);
@@ -856,6 +877,7 @@ version(BindBlend2D_Static) bool blPatternEquals(const(BLPatternCore)* a, const(
 
 version(BindBlend2D_Static) BLResult blPixelConverterInit(BLPixelConverterCore* self);
 version(BindBlend2D_Static) BLResult blPixelConverterInitWeak(BLPixelConverterCore* self, const(BLPixelConverterCore)* other);
+version(BindBlend2D_Static) BLResult blPixelConverterDestroy(BLPixelConverterCore* self);
 version(BindBlend2D_Static) BLResult blPixelConverterReset(BLPixelConverterCore* self);
 version(BindBlend2D_Static) BLResult blPixelConverterAssign(BLPixelConverterCore* self, const(BLPixelConverterCore)* other);
 version(BindBlend2D_Static) BLResult blPixelConverterCreate(BLPixelConverterCore* self, const(BLFormatInfo)* dstInfo, const(BLFormatInfo)* srcInfo, uint createFlags);
@@ -876,6 +898,7 @@ version(BindBlend2D_Static) ulong blRandomNextUInt64(BLRandom* self);
 version(BindBlend2D_Static) double blRandomNextDouble(BLRandom* self);
 
 version(BindBlend2D_Static) BLResult blRegionInit(BLRegionCore* self);
+version(BindBlend2D_Static) BLResult blRegionDestroy(BLRegionCore* self);
 version(BindBlend2D_Static) BLResult blRegionReset(BLRegionCore* self);
 version(BindBlend2D_Static) size_t blRegionGetSize(const(BLRegionCore)* self);
 version(BindBlend2D_Static) size_t blRegionGetCapacity(const(BLRegionCore)* self);
@@ -909,13 +932,14 @@ version(BindBlend2D_Static) BLResult blRuntimeQueryInfo(uint infoType, void* inf
 version(BindBlend2D_Static) BLResult blRuntimeMessageOut(const(char)* msg);
 version(BindBlend2D_Static) BLResult blRuntimeMessageFmt(const(char)* fmt, ...);
 version(BindBlend2D_Static) BLResult blRuntimeMessageVFmt(const(char)* fmt, va_list ap);
-version(BindBlend2D_Static) uint blRuntimeGetTickCount();
 
 version(BindBlend2D_Static) void blRuntimeAssertionFailure(const(char)* file, int line, const(char)* msg);
 
 //BLResult blResultFromWinError(uint e);
 
 version(BindBlend2D_Static) BLResult blStringInit(BLStringCore* self);
+version(BindBlend2D_Static) BLResult blStringInitWithData(BLStringCore* self, const(char)* str, size_t size);
+version(BindBlend2D_Static) BLResult blStringDestroy(BLStringCore* self);
 version(BindBlend2D_Static) BLResult blStringReset(BLStringCore* self);
 version(BindBlend2D_Static) size_t blStringGetSize(const(BLStringCore)* self);
 version(BindBlend2D_Static) size_t blStringGetCapacity(const(BLStringCore)* self);
@@ -948,13 +972,37 @@ version(BindBlend2D_Static) int blStringCompareData(const(BLStringCore)* self, c
 version(BindBlend2D_Static) BLResult blStrokeOptionsInit(BLStrokeOptionsCore* self);
 version(BindBlend2D_Static) BLResult blStrokeOptionsInitMove(BLStrokeOptionsCore* self, BLStrokeOptionsCore* other);
 version(BindBlend2D_Static) BLResult blStrokeOptionsInitWeak(BLStrokeOptionsCore* self, const(BLStrokeOptionsCore)* other);
+version(BindBlend2D_Static) BLResult blStrokeOptionsDestroy(BLStrokeOptionsCore* self);
 version(BindBlend2D_Static) BLResult blStrokeOptionsReset(BLStrokeOptionsCore* self);
 version(BindBlend2D_Static) BLResult blStrokeOptionsAssignMove(BLStrokeOptionsCore* self, BLStrokeOptionsCore* other);
 version(BindBlend2D_Static) BLResult blStrokeOptionsAssignWeak(BLStrokeOptionsCore* self, const(BLStrokeOptionsCore)* other);
 
+version(BindBlend2D_Static) BLResult blStyleInit(BLStyleCore* self);
+version(BindBlend2D_Static) BLResult blStyleInitMove(BLStyleCore* self, BLStyleCore* other);
+version(BindBlend2D_Static) BLResult blStyleInitWeak(BLStyleCore* self, const(BLStyleCore)* other);
+version(BindBlend2D_Static) BLResult blStyleInitRgba(BLStyleCore* self, const(BLRgba)* rgba);
+version(BindBlend2D_Static) BLResult blStyleInitRgba32(BLStyleCore* self, uint rgba32);
+version(BindBlend2D_Static) BLResult blStyleInitRgba64(BLStyleCore* self, ulong rgba64);
+version(BindBlend2D_Static) BLResult blStyleInitObject(BLStyleCore* self, const(void)* object);
+version(BindBlend2D_Static) BLResult blStyleDestroy(BLStyleCore* self);
+version(BindBlend2D_Static) BLResult blStyleReset(BLStyleCore* self);
+version(BindBlend2D_Static) BLResult blStyleAssignMove(BLStyleCore* self, BLStyleCore* other);
+version(BindBlend2D_Static) BLResult blStyleAssignWeak(BLStyleCore* self, const(BLStyleCore)* other);
+version(BindBlend2D_Static) BLResult blStyleAssignRgba(BLStyleCore* self, const(BLRgba)* rgba);
+version(BindBlend2D_Static) BLResult blStyleAssignRgba32(BLStyleCore* self, uint rgba32);
+version(BindBlend2D_Static) BLResult blStyleAssignRgba64(BLStyleCore* self, ulong rgba64);
+version(BindBlend2D_Static) BLResult blStyleAssignObject(BLStyleCore* self, const(void)* object);
+version(BindBlend2D_Static) uint blStyleGetType(const(BLStyleCore)* self);
+version(BindBlend2D_Static) BLResult blStyleGetRgba(const(BLStyleCore)* self, BLRgba* rgbaOut);
+version(BindBlend2D_Static) BLResult blStyleGetRgba32(const(BLStyleCore)* self, uint* rgba32Out);
+version(BindBlend2D_Static) BLResult blStyleGetRgba64(const(BLStyleCore)* self, ulong* rgba64Out);
+version(BindBlend2D_Static) BLResult blStyleGetObject(const(BLStyleCore)* self, void* object);
+version(BindBlend2D_Static) bool blStyleEquals(const(BLStyleCore)* a, const(BLStyleCore)* b);
+
 version(BindBlend2D_Static) BLResult blVariantInit(void* self);
 version(BindBlend2D_Static) BLResult blVariantInitMove(void* self, void* other);
 version(BindBlend2D_Static) BLResult blVariantInitWeak(void* self, const(void)* other);
+version(BindBlend2D_Static) BLResult blVariantDestroy(void* self);
 version(BindBlend2D_Static) BLResult blVariantReset(void* self);
 version(BindBlend2D_Static) uint blVariantGetImplType(const(void)* self);
 version(BindBlend2D_Static) BLResult blVariantAssignMove(void* self, void* other);
@@ -1039,15 +1087,39 @@ enum BLContextFlushFlags
 
 enum BLContextCreateFlags
 {
-    BL_CONTEXT_CREATE_FLAG_FORCE_THREADS = 0x00000001u,
+    BL_CONTEXT_CREATE_FLAG_FALLBACK_TO_SYNC = 0x00000008u,
 
-    BL_CONTEXT_CREATE_FLAG_FALLBACK_TO_SYNC = 0x00000002u,
+    BL_CONTEXT_CREATE_FLAG_ISOLATED_THREAD_POOL = 0x01000000u,
 
-    BL_CONTEXT_CREATE_FLAG_ISOLATED_THREADS = 0x00000010u,
+    BL_CONTEXT_CREATE_FLAG_ISOLATED_JIT = 0x02000000u,
 
-    BL_CONTEXT_CREATE_FLAG_ISOLATED_JIT = 0x00000020u,
+    BL_CONTEXT_CREATE_FLAG_OVERRIDE_CPU_FEATURES = 0x04000000u
+}
 
-    BL_CONTEXT_CREATE_FLAG_OVERRIDE_CPU_FEATURES = 0x00000040u
+enum BLContextProperty
+{
+    BL_CONTEXT_PROPERTY_THREAD_COUNT = 0,
+
+    BL_CONTEXT_PROPERTY_ACCUMULATED_ERROR_FLAGS = 10
+}
+
+enum BLContextErrorFlags
+{
+    BL_CONTEXT_ERROR_FLAG_INVALID_VALUE = 0x00000001u,
+
+    BL_CONTEXT_ERROR_FLAG_INVALID_STATE = 0x00000002u,
+
+    BL_CONTEXT_ERROR_FLAG_INVALID_GEOMETRY = 0x00000004u,
+
+    BL_CONTEXT_ERROR_FLAG_INVALID_GLYPH = 0x00000008u,
+
+    BL_CONTEXT_ERROR_FLAG_INVALID_FONT = 0x00000010u,
+
+    BL_CONTEXT_ERROR_FLAG_THREAD_POOL_EXHAUSTED = 0x20000000u,
+
+    BL_CONTEXT_ERROR_FLAG_OUT_OF_MEMORY = 0x40000000u,
+
+    BL_CONTEXT_ERROR_FLAG_UNKNOWN_ERROR = 0x80000000u
 }
 
 enum BLClipMode
@@ -1155,7 +1227,9 @@ struct BLContextCreateInfo
 
     uint cpuFeatures;
 
-    uint[5] reserved;
+    uint commandQueueLimit;
+
+    uint[4] reserved;
 }
 
 struct BLContextCookie
@@ -1180,7 +1254,7 @@ struct BLContextHints
 
 struct BLContextState
 {
-    BLImageCore targetImage;
+    BLImageCore* targetImage;
 
     BLSize targetSize;
 
@@ -1214,6 +1288,8 @@ struct BLContextVirt
     BLResult function(BLContextImpl* impl) destroy;
     BLResult function(BLContextImpl* impl, uint flags) flush;
 
+    BLResult function(const(BLContextImpl)* impl, uint propertyId, void* valueOut) queryProperty;
+
     BLResult function(BLContextImpl* impl, BLContextCookie* cookie) save;
     BLResult function(BLContextImpl* impl, const(BLContextCookie)* cookie) restore;
 
@@ -1230,12 +1306,12 @@ struct BLContextVirt
     BLResult function(BLContextImpl* impl, double alpha) setGlobalAlpha;
 
     BLResult function(BLContextImpl* impl, double alpha)[2] setStyleAlpha;
-    BLResult function(const(BLContextImpl)* impl, void* object)[2] getStyle;
-    BLResult function(const(BLContextImpl)* impl, uint* rgba32)[2] getStyleRgba32;
-    BLResult function(const(BLContextImpl)* impl, ulong* rgba64)[2] getStyleRgba64;
-    BLResult function(BLContextImpl* impl, const(void)* object)[2] setStyle;
+    BLResult function(const(BLContextImpl)* impl, BLStyleCore* out_)[2] getStyle;
+    BLResult function(BLContextImpl* impl, const(BLStyleCore)* style)[2] setStyle;
+    BLResult function(BLContextImpl* impl, const(BLRgba)* rgba)[2] setStyleRgba;
     BLResult function(BLContextImpl* impl, uint rgba32)[2] setStyleRgba32;
     BLResult function(BLContextImpl* impl, ulong rgba64)[2] setStyleRgba64;
+    BLResult function(BLContextImpl* impl, const(void)* object)[2] setStyleObject;
 
     BLResult function(BLContextImpl* impl, uint fillRule) setFillRule;
 
@@ -1332,7 +1408,7 @@ enum BLFileOpenFlags
     BL_FILE_OPEN_DELETE_EXCLUSIVE = 0x80000000u
 }
 
-enum BLFileSeek
+enum BLFileSeekType
 {
     BL_FILE_SEEK_SET = 0,
 
@@ -1416,7 +1492,7 @@ struct BLFontFaceImpl
 
     BLFontFaceInfo faceInfo;
 
-    ulong faceUniqueId;
+    BLUniqueId uniqueId;
 
     BLFontDataCore data;
 
@@ -1934,6 +2010,15 @@ struct BLFontFaceInfo
     uint[3] reserved;
 }
 
+struct BLFontQueryProperties
+{
+    uint style;
+
+    uint weight;
+
+    uint stretch;
+}
+
 struct BLFontTable
 {
     const(ubyte)* data;
@@ -2339,7 +2424,9 @@ enum BLGeometryType
 
     BL_GEOMETRY_TYPE_REGION = 22,
 
-    BL_GEOMETRY_TYPE_COUNT = 23
+    BL_GEOMETRY_TYPE_COUNT = 23,
+
+    BL_GEOMETRY_TYPE_SIMPLE_LAST = BL_GEOMETRY_TYPE_TRIANGLE
 }
 
 enum BLFillRule
@@ -3299,7 +3386,7 @@ struct BLRgba64
     }
 }
 
-struct BLRgba128
+struct BLRgba
 {
     float r;
     float g;
@@ -3321,7 +3408,7 @@ enum BLRuntimeInfoType
 
     BL_RUNTIME_INFO_TYPE_SYSTEM = 1,
 
-    BL_RUNTIME_INFO_TYPE_MEMORY = 2,
+    BL_RUNTIME_INFO_TYPE_RESOURCE = 2,
 
     BL_RUNTIME_INFO_TYPE_COUNT = 3
 }
@@ -3405,16 +3492,16 @@ struct BLRuntimeSystemInfo
 
     uint threadCount;
 
-    uint minThreadStackSize;
+    uint threadStackSize;
 
-    uint minWorkerStackSize;
+    uint removed;
 
     uint allocationGranularity;
 
     uint[5] reserved;
 }
 
-struct BLRuntimeMemoryInfo
+struct BLRuntimeResourceInfo
 {
     size_t vmUsed;
 
@@ -3433,6 +3520,12 @@ struct BLRuntimeMemoryInfo
     size_t zmBlockCount;
 
     size_t dynamicPipelineCount;
+
+    size_t fileHandleCount;
+
+    size_t fileMappingCount;
+
+    size_t[5] reserved;
 }
 extern (C):
 
@@ -3466,6 +3559,45 @@ struct BLStringImpl
 struct BLStringCore
 {
     BLStringImpl* impl;
+}
+extern (C):
+
+enum BLStyleType
+{
+    BL_STYLE_TYPE_NONE = 0,
+
+    BL_STYLE_TYPE_SOLID = 1,
+
+    BL_STYLE_TYPE_PATTERN = 2,
+
+    BL_STYLE_TYPE_GRADIENT = 3,
+
+    BL_STYLE_TYPE_COUNT = 4
+}
+
+struct BLStyleCore
+{
+    union
+    {
+        BLRgba rgba;
+
+        BLVariantCore variant;
+
+        BLPatternCore pattern;
+
+        BLGradientCore gradient;
+
+        struct _Anonymous_0
+        {
+            ulong unknown;
+            uint type;
+            uint tag;
+        }
+
+        _Anonymous_0 data;
+
+        ulong[2] u64Data;
+    }
 }
 import core.stdc.stdint;
 

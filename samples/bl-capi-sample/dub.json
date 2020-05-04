@@ -8,7 +8,7 @@
         "bindbc-blend2d" : { "path" : "../.." }
     },
 
-    "libs": [ "asmjit", "blend2d" ],
+    "libs": [ "blend2d" ],
 
     "configurations" : [
         {

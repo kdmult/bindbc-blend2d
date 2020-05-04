@@ -78,6 +78,9 @@ __gshared pblArrayClear blArrayClear;
 extern(C) @nogc nothrow alias pblArrayCreateFromData = BLResult function(BLArrayCore* self, void* data, size_t size, size_t capacity, uint dataAccessFlags, BLDestroyImplFunc destroyFunc, void* destroyData);
 __gshared pblArrayCreateFromData blArrayCreateFromData;
 
+extern(C) @nogc nothrow alias pblArrayDestroy = BLResult function(BLArrayCore* self);
+__gshared pblArrayDestroy blArrayDestroy;
+
 extern(C) @nogc nothrow alias pblArrayEquals = bool function(const(BLArrayCore)* a, const(BLArrayCore)* b);
 __gshared pblArrayEquals blArrayEquals;
 
@@ -204,6 +207,9 @@ __gshared pblContextClipToRectD blContextClipToRectD;
 extern(C) @nogc nothrow alias pblContextClipToRectI = BLResult function(BLContextCore* self, const(BLRectI)* rect);
 __gshared pblContextClipToRectI blContextClipToRectI;
 
+extern(C) @nogc nothrow alias pblContextDestroy = BLResult function(BLContextCore* self);
+__gshared pblContextDestroy blContextDestroy;
+
 extern(C) @nogc nothrow alias pblContextEnd = BLResult function(BLContextCore* self);
 __gshared pblContextEnd blContextEnd;
 
@@ -237,14 +243,8 @@ __gshared pblContextFillTextI blContextFillTextI;
 extern(C) @nogc nothrow alias pblContextFlush = BLResult function(BLContextCore* self, uint flags);
 __gshared pblContextFlush blContextFlush;
 
-extern(C) @nogc nothrow alias pblContextGetFillStyle = BLResult function(const(BLContextCore)* self, void* object);
+extern(C) @nogc nothrow alias pblContextGetFillStyle = BLResult function(const(BLContextCore)* self, BLStyleCore* styleOut);
 __gshared pblContextGetFillStyle blContextGetFillStyle;
-
-extern(C) @nogc nothrow alias pblContextGetFillStyleRgba32 = BLResult function(const(BLContextCore)* self, uint* rgba32);
-__gshared pblContextGetFillStyleRgba32 blContextGetFillStyleRgba32;
-
-extern(C) @nogc nothrow alias pblContextGetFillStyleRgba64 = BLResult function(const(BLContextCore)* self, ulong* rgba64);
-__gshared pblContextGetFillStyleRgba64 blContextGetFillStyleRgba64;
 
 extern(C) @nogc nothrow alias pblContextGetMetaMatrix = BLResult function(const(BLContextCore)* self, BLMatrix2D* m);
 __gshared pblContextGetMetaMatrix blContextGetMetaMatrix;
@@ -252,14 +252,8 @@ __gshared pblContextGetMetaMatrix blContextGetMetaMatrix;
 extern(C) @nogc nothrow alias pblContextGetStrokeOptions = BLResult function(const(BLContextCore)* self, BLStrokeOptionsCore* options);
 __gshared pblContextGetStrokeOptions blContextGetStrokeOptions;
 
-extern(C) @nogc nothrow alias pblContextGetStrokeStyle = BLResult function(const(BLContextCore)* self, void* object);
+extern(C) @nogc nothrow alias pblContextGetStrokeStyle = BLResult function(const(BLContextCore)* self, BLStyleCore* styleOut);
 __gshared pblContextGetStrokeStyle blContextGetStrokeStyle;
-
-extern(C) @nogc nothrow alias pblContextGetStrokeStyleRgba32 = BLResult function(const(BLContextCore)* self, uint* rgba32);
-__gshared pblContextGetStrokeStyleRgba32 blContextGetStrokeStyleRgba32;
-
-extern(C) @nogc nothrow alias pblContextGetStrokeStyleRgba64 = BLResult function(const(BLContextCore)* self, ulong* rgba64);
-__gshared pblContextGetStrokeStyleRgba64 blContextGetStrokeStyleRgba64;
 
 extern(C) @nogc nothrow alias pblContextGetTargetImage = BLImageCore* function(const(BLContextCore)* self);
 __gshared pblContextGetTargetImage blContextGetTargetImage;
@@ -281,6 +275,9 @@ __gshared pblContextInitAs blContextInitAs;
 
 extern(C) @nogc nothrow alias pblContextMatrixOp = BLResult function(BLContextCore* self, uint opType, const(void)* opData);
 __gshared pblContextMatrixOp blContextMatrixOp;
+
+extern(C) @nogc nothrow alias pblContextQueryProperty = BLResult function(const(BLContextCore)* self, uint propertyId, void* valueOut);
+__gshared pblContextQueryProperty blContextQueryProperty;
 
 extern(C) @nogc nothrow alias pblContextReset = BLResult function(BLContextCore* self);
 __gshared pblContextReset blContextReset;
@@ -306,8 +303,14 @@ __gshared pblContextSetFillAlpha blContextSetFillAlpha;
 extern(C) @nogc nothrow alias pblContextSetFillRule = BLResult function(BLContextCore* self, uint fillRule);
 __gshared pblContextSetFillRule blContextSetFillRule;
 
-extern(C) @nogc nothrow alias pblContextSetFillStyle = BLResult function(BLContextCore* self, const(void)* object);
+extern(C) @nogc nothrow alias pblContextSetFillStyle = BLResult function(BLContextCore* self, const(BLStyleCore)* style);
 __gshared pblContextSetFillStyle blContextSetFillStyle;
+
+extern(C) @nogc nothrow alias pblContextSetFillStyleObject = BLResult function(BLContextCore* self, const(void)* object);
+__gshared pblContextSetFillStyleObject blContextSetFillStyleObject;
+
+extern(C) @nogc nothrow alias pblContextSetFillStyleRgba = BLResult function(BLContextCore* self, const(BLRgba)* rgba);
+__gshared pblContextSetFillStyleRgba blContextSetFillStyleRgba;
 
 extern(C) @nogc nothrow alias pblContextSetFillStyleRgba32 = BLResult function(BLContextCore* self, uint rgba32);
 __gshared pblContextSetFillStyleRgba32 blContextSetFillStyleRgba32;
@@ -354,8 +357,14 @@ __gshared pblContextSetStrokeMiterLimit blContextSetStrokeMiterLimit;
 extern(C) @nogc nothrow alias pblContextSetStrokeOptions = BLResult function(BLContextCore* self, const(BLStrokeOptionsCore)* options);
 __gshared pblContextSetStrokeOptions blContextSetStrokeOptions;
 
-extern(C) @nogc nothrow alias pblContextSetStrokeStyle = BLResult function(BLContextCore* self, const(void)* object);
+extern(C) @nogc nothrow alias pblContextSetStrokeStyle = BLResult function(BLContextCore* self, const(BLStyleCore)* style);
 __gshared pblContextSetStrokeStyle blContextSetStrokeStyle;
+
+extern(C) @nogc nothrow alias pblContextSetStrokeStyleObject = BLResult function(BLContextCore* self, const(void)* object);
+__gshared pblContextSetStrokeStyleObject blContextSetStrokeStyleObject;
+
+extern(C) @nogc nothrow alias pblContextSetStrokeStyleRgba = BLResult function(BLContextCore* self, const(BLRgba)* rgba);
+__gshared pblContextSetStrokeStyleRgba blContextSetStrokeStyleRgba;
 
 extern(C) @nogc nothrow alias pblContextSetStrokeStyleRgba32 = BLResult function(BLContextCore* self, uint rgba32);
 __gshared pblContextSetStrokeStyleRgba32 blContextSetStrokeStyleRgba32;
@@ -462,6 +471,9 @@ __gshared pblFontDataCreateFromDataArray blFontDataCreateFromDataArray;
 extern(C) @nogc nothrow alias pblFontDataCreateFromFile = BLResult function(BLFontDataCore* self, const(char)* fileName, uint readFlags);
 __gshared pblFontDataCreateFromFile blFontDataCreateFromFile;
 
+extern(C) @nogc nothrow alias pblFontDataDestroy = BLResult function(BLFontDataCore* self);
+__gshared pblFontDataDestroy blFontDataDestroy;
+
 extern(C) @nogc nothrow alias pblFontDataEquals = bool function(const(BLFontDataCore)* a, const(BLFontDataCore)* b);
 __gshared pblFontDataEquals blFontDataEquals;
 
@@ -477,6 +489,9 @@ __gshared pblFontDataQueryTables blFontDataQueryTables;
 extern(C) @nogc nothrow alias pblFontDataReset = BLResult function(BLFontDataCore* self);
 __gshared pblFontDataReset blFontDataReset;
 
+extern(C) @nogc nothrow alias pblFontDestroy = BLResult function(BLFontCore* self);
+__gshared pblFontDestroy blFontDestroy;
+
 extern(C) @nogc nothrow alias pblFontEquals = bool function(const(BLFontCore)* a, const(BLFontCore)* b);
 __gshared pblFontEquals blFontEquals;
 
@@ -491,6 +506,9 @@ __gshared pblFontFaceCreateFromData blFontFaceCreateFromData;
 
 extern(C) @nogc nothrow alias pblFontFaceCreateFromFile = BLResult function(BLFontFaceCore* self, const(char)* fileName, uint readFlags);
 __gshared pblFontFaceCreateFromFile blFontFaceCreateFromFile;
+
+extern(C) @nogc nothrow alias pblFontFaceDestroy = BLResult function(BLFontFaceCore* self);
+__gshared pblFontFaceDestroy blFontFaceDestroy;
 
 extern(C) @nogc nothrow alias pblFontFaceEquals = bool function(const(BLFontFaceCore)* a, const(BLFontFaceCore)* b);
 __gshared pblFontFaceEquals blFontFaceEquals;
@@ -537,17 +555,44 @@ __gshared pblFontGetTextMetrics blFontGetTextMetrics;
 extern(C) @nogc nothrow alias pblFontInit = BLResult function(BLFontCore* self);
 __gshared pblFontInit blFontInit;
 
+extern(C) @nogc nothrow alias pblFontManagerAddFace = BLResult function(BLFontManagerCore* self, const(BLFontFaceCore)* face);
+__gshared pblFontManagerAddFace blFontManagerAddFace;
+
 extern(C) @nogc nothrow alias pblFontManagerAssignMove = BLResult function(BLFontManagerCore* self, BLFontManagerCore* other);
 __gshared pblFontManagerAssignMove blFontManagerAssignMove;
 
 extern(C) @nogc nothrow alias pblFontManagerAssignWeak = BLResult function(BLFontManagerCore* self, const(BLFontManagerCore)* other);
 __gshared pblFontManagerAssignWeak blFontManagerAssignWeak;
 
+extern(C) @nogc nothrow alias pblFontManagerCreate = BLResult function(BLFontManagerCore* self);
+__gshared pblFontManagerCreate blFontManagerCreate;
+
+extern(C) @nogc nothrow alias pblFontManagerDestroy = BLResult function(BLFontManagerCore* self);
+__gshared pblFontManagerDestroy blFontManagerDestroy;
+
 extern(C) @nogc nothrow alias pblFontManagerEquals = bool function(const(BLFontManagerCore)* a, const(BLFontManagerCore)* b);
 __gshared pblFontManagerEquals blFontManagerEquals;
 
+extern(C) @nogc nothrow alias pblFontManagerGetFaceCount = BLResult function(const(BLFontManagerCore)* self);
+__gshared pblFontManagerGetFaceCount blFontManagerGetFaceCount;
+
+extern(C) @nogc nothrow alias pblFontManagerGetFamilyCount = BLResult function(const(BLFontManagerCore)* self);
+__gshared pblFontManagerGetFamilyCount blFontManagerGetFamilyCount;
+
+extern(C) @nogc nothrow alias pblFontManagerHasFace = bool function(const(BLFontManagerCore)* self, const(BLFontFaceCore)* face);
+__gshared pblFontManagerHasFace blFontManagerHasFace;
+
 extern(C) @nogc nothrow alias pblFontManagerInit = BLResult function(BLFontManagerCore* self);
 __gshared pblFontManagerInit blFontManagerInit;
+
+extern(C) @nogc nothrow alias pblFontManagerInitNew = BLResult function(BLFontManagerCore* self);
+__gshared pblFontManagerInitNew blFontManagerInitNew;
+
+extern(C) @nogc nothrow alias pblFontManagerQueryFace = BLResult function(const(BLFontManagerCore)* self, const(char)* name, size_t nameSize, const(BLFontQueryProperties)* properties, BLFontFaceCore* out_);
+__gshared pblFontManagerQueryFace blFontManagerQueryFace;
+
+extern(C) @nogc nothrow alias pblFontManagerQueryFacesByFamilyName = BLResult function(const(BLFontManagerCore)* self, const(char)* name, size_t nameSize, BLArrayCore* out_);
+__gshared pblFontManagerQueryFacesByFamilyName blFontManagerQueryFacesByFamilyName;
 
 extern(C) @nogc nothrow alias pblFontManagerReset = BLResult function(BLFontManagerCore* self);
 __gshared pblFontManagerReset blFontManagerReset;
@@ -572,6 +617,9 @@ __gshared pblFormatInfoSanitize blFormatInfoSanitize;
 
 extern(C) @nogc nothrow alias pblGlyphBufferClear = BLResult function(BLGlyphBufferCore* self);
 __gshared pblGlyphBufferClear blGlyphBufferClear;
+
+extern(C) @nogc nothrow alias pblGlyphBufferDestroy = BLResult function(BLGlyphBufferCore* self);
+__gshared pblGlyphBufferDestroy blGlyphBufferDestroy;
 
 extern(C) @nogc nothrow alias pblGlyphBufferGetContent = const(uint)* function(const(BLGlyphBufferCore)* self);
 __gshared pblGlyphBufferGetContent blGlyphBufferGetContent;
@@ -629,6 +677,9 @@ __gshared pblGradientAssignWeak blGradientAssignWeak;
 
 extern(C) @nogc nothrow alias pblGradientCreate = BLResult function(BLGradientCore* self, uint type, const(void)* values, uint extendMode, const(BLGradientStop)* stops, size_t n, const(BLMatrix2D)* m);
 __gshared pblGradientCreate blGradientCreate;
+
+extern(C) @nogc nothrow alias pblGradientDestroy = BLResult function(BLGradientCore* self);
+__gshared pblGradientDestroy blGradientDestroy;
 
 extern(C) @nogc nothrow alias pblGradientEquals = bool function(const(BLGradientCore)* a, const(BLGradientCore)* b);
 __gshared pblGradientEquals blGradientEquals;
@@ -729,8 +780,14 @@ __gshared pblImageCodecCreateDecoder blImageCodecCreateDecoder;
 extern(C) @nogc nothrow alias pblImageCodecCreateEncoder = BLResult function(const(BLImageCodecCore)* self, BLImageEncoderCore* dst);
 __gshared pblImageCodecCreateEncoder blImageCodecCreateEncoder;
 
+extern(C) @nogc nothrow alias pblImageCodecDestroy = BLResult function(BLImageCodecCore* self);
+__gshared pblImageCodecDestroy blImageCodecDestroy;
+
 extern(C) @nogc nothrow alias pblImageCodecFindByData = BLResult function(BLImageCodecCore* self, const(void)* data, size_t size, const(BLArrayCore)* codecs);
 __gshared pblImageCodecFindByData blImageCodecFindByData;
+
+extern(C) @nogc nothrow alias pblImageCodecFindByExtension = BLResult function(BLImageCodecCore* self, const(char)* name, size_t size, const(BLArrayCore)* codecs);
+__gshared pblImageCodecFindByExtension blImageCodecFindByExtension;
 
 extern(C) @nogc nothrow alias pblImageCodecFindByName = BLResult function(BLImageCodecCore* self, const(char)* name, size_t size, const(BLArrayCore)* codecs);
 __gshared pblImageCodecFindByName blImageCodecFindByName;
@@ -762,6 +819,9 @@ __gshared pblImageDecoderAssignMove blImageDecoderAssignMove;
 extern(C) @nogc nothrow alias pblImageDecoderAssignWeak = BLResult function(BLImageDecoderCore* self, const(BLImageDecoderCore)* other);
 __gshared pblImageDecoderAssignWeak blImageDecoderAssignWeak;
 
+extern(C) @nogc nothrow alias pblImageDecoderDestroy = BLResult function(BLImageDecoderCore* self);
+__gshared pblImageDecoderDestroy blImageDecoderDestroy;
+
 extern(C) @nogc nothrow alias pblImageDecoderInit = BLResult function(BLImageDecoderCore* self);
 __gshared pblImageDecoderInit blImageDecoderInit;
 
@@ -777,11 +837,17 @@ __gshared pblImageDecoderReset blImageDecoderReset;
 extern(C) @nogc nothrow alias pblImageDecoderRestart = BLResult function(BLImageDecoderCore* self);
 __gshared pblImageDecoderRestart blImageDecoderRestart;
 
+extern(C) @nogc nothrow alias pblImageDestroy = BLResult function(BLImageCore* self);
+__gshared pblImageDestroy blImageDestroy;
+
 extern(C) @nogc nothrow alias pblImageEncoderAssignMove = BLResult function(BLImageEncoderCore* self, BLImageEncoderCore* other);
 __gshared pblImageEncoderAssignMove blImageEncoderAssignMove;
 
 extern(C) @nogc nothrow alias pblImageEncoderAssignWeak = BLResult function(BLImageEncoderCore* self, const(BLImageEncoderCore)* other);
 __gshared pblImageEncoderAssignWeak blImageEncoderAssignWeak;
+
+extern(C) @nogc nothrow alias pblImageEncoderDestroy = BLResult function(BLImageEncoderCore* self);
+__gshared pblImageEncoderDestroy blImageEncoderDestroy;
 
 extern(C) @nogc nothrow alias pblImageEncoderInit = BLResult function(BLImageEncoderCore* self);
 __gshared pblImageEncoderInit blImageEncoderInit;
@@ -912,6 +978,9 @@ __gshared pblPathClose blPathClose;
 extern(C) @nogc nothrow alias pblPathCubicTo = BLResult function(BLPathCore* self, double x1, double y1, double x2, double y2, double x3, double y3);
 __gshared pblPathCubicTo blPathCubicTo;
 
+extern(C) @nogc nothrow alias pblPathDestroy = BLResult function(BLPathCore* self);
+__gshared pblPathDestroy blPathDestroy;
+
 extern(C) @nogc nothrow alias pblPathEllipticArcTo = BLResult function(BLPathCore* self, double rx, double ry, double xAxisRotation, bool largeArcFlag, bool sweepFlag, double x1, double y1);
 __gshared pblPathEllipticArcTo blPathEllipticArcTo;
 
@@ -1014,6 +1083,9 @@ __gshared pblPatternAssignWeak blPatternAssignWeak;
 extern(C) @nogc nothrow alias pblPatternCreate = BLResult function(BLPatternCore* self, const(BLImageCore)* image, const(BLRectI)* area, uint extendMode, const(BLMatrix2D)* m);
 __gshared pblPatternCreate blPatternCreate;
 
+extern(C) @nogc nothrow alias pblPatternDestroy = BLResult function(BLPatternCore* self);
+__gshared pblPatternDestroy blPatternDestroy;
+
 extern(C) @nogc nothrow alias pblPatternEquals = bool function(const(BLPatternCore)* a, const(BLPatternCore)* b);
 __gshared pblPatternEquals blPatternEquals;
 
@@ -1040,6 +1112,9 @@ __gshared pblPixelConverterAssign blPixelConverterAssign;
 
 extern(C) @nogc nothrow alias pblPixelConverterCreate = BLResult function(BLPixelConverterCore* self, const(BLFormatInfo)* dstInfo, const(BLFormatInfo)* srcInfo, uint createFlags);
 __gshared pblPixelConverterCreate blPixelConverterCreate;
+
+extern(C) @nogc nothrow alias pblPixelConverterDestroy = BLResult function(BLPixelConverterCore* self);
+__gshared pblPixelConverterDestroy blPixelConverterDestroy;
 
 extern(C) @nogc nothrow alias pblPixelConverterInit = BLResult function(BLPixelConverterCore* self);
 __gshared pblPixelConverterInit blPixelConverterInit;
@@ -1098,6 +1173,9 @@ __gshared pblRegionCombineBR blRegionCombineBR;
 extern(C) @nogc nothrow alias pblRegionCombineRB = BLResult function(BLRegionCore* self, const(BLRegionCore)* a, const(BLBoxI)* b, uint booleanOp);
 __gshared pblRegionCombineRB blRegionCombineRB;
 
+extern(C) @nogc nothrow alias pblRegionDestroy = BLResult function(BLRegionCore* self);
+__gshared pblRegionDestroy blRegionDestroy;
+
 extern(C) @nogc nothrow alias pblRegionEquals = bool function(const(BLRegionCore)* a, const(BLRegionCore)* b);
 __gshared pblRegionEquals blRegionEquals;
 
@@ -1145,9 +1223,6 @@ __gshared pblRuntimeAssertionFailure blRuntimeAssertionFailure;
 
 extern(C) @nogc nothrow alias pblRuntimeCleanup = BLResult function(uint cleanupFlags);
 __gshared pblRuntimeCleanup blRuntimeCleanup;
-
-extern(C) @nogc nothrow alias pblRuntimeGetTickCount = uint function();
-__gshared pblRuntimeGetTickCount blRuntimeGetTickCount;
 
 extern(C) @nogc nothrow alias pblRuntimeInit = BLResult function();
 __gshared pblRuntimeInit blRuntimeInit;
@@ -1203,6 +1278,9 @@ __gshared pblStringCompare blStringCompare;
 extern(C) @nogc nothrow alias pblStringCompareData = int function(const(BLStringCore)* self, const(char)* str, size_t n);
 __gshared pblStringCompareData blStringCompareData;
 
+extern(C) @nogc nothrow alias pblStringDestroy = BLResult function(BLStringCore* self);
+__gshared pblStringDestroy blStringDestroy;
+
 extern(C) @nogc nothrow alias pblStringEquals = bool function(const(BLStringCore)* self, const(BLStringCore)* other);
 __gshared pblStringEquals blStringEquals;
 
@@ -1220,6 +1298,9 @@ __gshared pblStringGetSize blStringGetSize;
 
 extern(C) @nogc nothrow alias pblStringInit = BLResult function(BLStringCore* self);
 __gshared pblStringInit blStringInit;
+
+extern(C) @nogc nothrow alias pblStringInitWithData = BLResult function(BLStringCore* self, const(char)* str, size_t size);
+__gshared pblStringInitWithData blStringInitWithData;
 
 extern(C) @nogc nothrow alias pblStringInsertChar = BLResult function(BLStringCore* self, size_t index, char c, size_t n);
 __gshared pblStringInsertChar blStringInsertChar;
@@ -1260,6 +1341,9 @@ __gshared pblStrokeOptionsAssignMove blStrokeOptionsAssignMove;
 extern(C) @nogc nothrow alias pblStrokeOptionsAssignWeak = BLResult function(BLStrokeOptionsCore* self, const(BLStrokeOptionsCore)* other);
 __gshared pblStrokeOptionsAssignWeak blStrokeOptionsAssignWeak;
 
+extern(C) @nogc nothrow alias pblStrokeOptionsDestroy = BLResult function(BLStrokeOptionsCore* self);
+__gshared pblStrokeOptionsDestroy blStrokeOptionsDestroy;
+
 extern(C) @nogc nothrow alias pblStrokeOptionsInit = BLResult function(BLStrokeOptionsCore* self);
 __gshared pblStrokeOptionsInit blStrokeOptionsInit;
 
@@ -1272,11 +1356,77 @@ __gshared pblStrokeOptionsInitWeak blStrokeOptionsInitWeak;
 extern(C) @nogc nothrow alias pblStrokeOptionsReset = BLResult function(BLStrokeOptionsCore* self);
 __gshared pblStrokeOptionsReset blStrokeOptionsReset;
 
+extern(C) @nogc nothrow alias pblStyleAssignMove = BLResult function(BLStyleCore* self, BLStyleCore* other);
+__gshared pblStyleAssignMove blStyleAssignMove;
+
+extern(C) @nogc nothrow alias pblStyleAssignObject = BLResult function(BLStyleCore* self, const(void)* object);
+__gshared pblStyleAssignObject blStyleAssignObject;
+
+extern(C) @nogc nothrow alias pblStyleAssignRgba = BLResult function(BLStyleCore* self, const(BLRgba)* rgba);
+__gshared pblStyleAssignRgba blStyleAssignRgba;
+
+extern(C) @nogc nothrow alias pblStyleAssignRgba32 = BLResult function(BLStyleCore* self, uint rgba32);
+__gshared pblStyleAssignRgba32 blStyleAssignRgba32;
+
+extern(C) @nogc nothrow alias pblStyleAssignRgba64 = BLResult function(BLStyleCore* self, ulong rgba64);
+__gshared pblStyleAssignRgba64 blStyleAssignRgba64;
+
+extern(C) @nogc nothrow alias pblStyleAssignWeak = BLResult function(BLStyleCore* self, const(BLStyleCore)* other);
+__gshared pblStyleAssignWeak blStyleAssignWeak;
+
+extern(C) @nogc nothrow alias pblStyleDestroy = BLResult function(BLStyleCore* self);
+__gshared pblStyleDestroy blStyleDestroy;
+
+extern(C) @nogc nothrow alias pblStyleEquals = bool function(const(BLStyleCore)* a, const(BLStyleCore)* b);
+__gshared pblStyleEquals blStyleEquals;
+
+extern(C) @nogc nothrow alias pblStyleGetObject = BLResult function(const(BLStyleCore)* self, void* object);
+__gshared pblStyleGetObject blStyleGetObject;
+
+extern(C) @nogc nothrow alias pblStyleGetRgba = BLResult function(const(BLStyleCore)* self, BLRgba* rgbaOut);
+__gshared pblStyleGetRgba blStyleGetRgba;
+
+extern(C) @nogc nothrow alias pblStyleGetRgba32 = BLResult function(const(BLStyleCore)* self, uint* rgba32Out);
+__gshared pblStyleGetRgba32 blStyleGetRgba32;
+
+extern(C) @nogc nothrow alias pblStyleGetRgba64 = BLResult function(const(BLStyleCore)* self, ulong* rgba64Out);
+__gshared pblStyleGetRgba64 blStyleGetRgba64;
+
+extern(C) @nogc nothrow alias pblStyleGetType = uint function(const(BLStyleCore)* self);
+__gshared pblStyleGetType blStyleGetType;
+
+extern(C) @nogc nothrow alias pblStyleInit = BLResult function(BLStyleCore* self);
+__gshared pblStyleInit blStyleInit;
+
+extern(C) @nogc nothrow alias pblStyleInitMove = BLResult function(BLStyleCore* self, BLStyleCore* other);
+__gshared pblStyleInitMove blStyleInitMove;
+
+extern(C) @nogc nothrow alias pblStyleInitObject = BLResult function(BLStyleCore* self, const(void)* object);
+__gshared pblStyleInitObject blStyleInitObject;
+
+extern(C) @nogc nothrow alias pblStyleInitRgba = BLResult function(BLStyleCore* self, const(BLRgba)* rgba);
+__gshared pblStyleInitRgba blStyleInitRgba;
+
+extern(C) @nogc nothrow alias pblStyleInitRgba32 = BLResult function(BLStyleCore* self, uint rgba32);
+__gshared pblStyleInitRgba32 blStyleInitRgba32;
+
+extern(C) @nogc nothrow alias pblStyleInitRgba64 = BLResult function(BLStyleCore* self, ulong rgba64);
+__gshared pblStyleInitRgba64 blStyleInitRgba64;
+
+extern(C) @nogc nothrow alias pblStyleInitWeak = BLResult function(BLStyleCore* self, const(BLStyleCore)* other);
+__gshared pblStyleInitWeak blStyleInitWeak;
+
+extern(C) @nogc nothrow alias pblStyleReset = BLResult function(BLStyleCore* self);
+__gshared pblStyleReset blStyleReset;
+
 extern(C) @nogc nothrow alias pblVariantAssignMove = BLResult function(void* self, void* other);
 __gshared pblVariantAssignMove blVariantAssignMove;
 
 extern(C) @nogc nothrow alias pblVariantAssignWeak = BLResult function(void* self, const(void)* other);
 __gshared pblVariantAssignWeak blVariantAssignWeak;
+
+extern(C) @nogc nothrow alias pblVariantDestroy = BLResult function(void* self);
+__gshared pblVariantDestroy blVariantDestroy;
 
 extern(C) @nogc nothrow alias pblVariantEquals = bool function(const(void)* a, const(void)* b);
 __gshared pblVariantEquals blVariantEquals;
@@ -1379,6 +1529,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blArrayAssignWeak, "blArrayAssignWeak");
     lib.bindSymbol_stdcall(blArrayClear, "blArrayClear");
     lib.bindSymbol_stdcall(blArrayCreateFromData, "blArrayCreateFromData");
+    lib.bindSymbol_stdcall(blArrayDestroy, "blArrayDestroy");
     lib.bindSymbol_stdcall(blArrayEquals, "blArrayEquals");
     lib.bindSymbol_stdcall(blArrayGetCapacity, "blArrayGetCapacity");
     lib.bindSymbol_stdcall(blArrayGetData, "blArrayGetData");
@@ -1421,6 +1572,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blContextClearRectI, "blContextClearRectI");
     lib.bindSymbol_stdcall(blContextClipToRectD, "blContextClipToRectD");
     lib.bindSymbol_stdcall(blContextClipToRectI, "blContextClipToRectI");
+    lib.bindSymbol_stdcall(blContextDestroy, "blContextDestroy");
     lib.bindSymbol_stdcall(blContextEnd, "blContextEnd");
     lib.bindSymbol_stdcall(blContextFillAll, "blContextFillAll");
     lib.bindSymbol_stdcall(blContextFillGeometry, "blContextFillGeometry");
@@ -1433,13 +1585,9 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blContextFillTextI, "blContextFillTextI");
     lib.bindSymbol_stdcall(blContextFlush, "blContextFlush");
     lib.bindSymbol_stdcall(blContextGetFillStyle, "blContextGetFillStyle");
-    lib.bindSymbol_stdcall(blContextGetFillStyleRgba32, "blContextGetFillStyleRgba32");
-    lib.bindSymbol_stdcall(blContextGetFillStyleRgba64, "blContextGetFillStyleRgba64");
     lib.bindSymbol_stdcall(blContextGetMetaMatrix, "blContextGetMetaMatrix");
     lib.bindSymbol_stdcall(blContextGetStrokeOptions, "blContextGetStrokeOptions");
     lib.bindSymbol_stdcall(blContextGetStrokeStyle, "blContextGetStrokeStyle");
-    lib.bindSymbol_stdcall(blContextGetStrokeStyleRgba32, "blContextGetStrokeStyleRgba32");
-    lib.bindSymbol_stdcall(blContextGetStrokeStyleRgba64, "blContextGetStrokeStyleRgba64");
     lib.bindSymbol_stdcall(blContextGetTargetImage, "blContextGetTargetImage");
     lib.bindSymbol_stdcall(blContextGetTargetSize, "blContextGetTargetSize");
     lib.bindSymbol_stdcall(blContextGetType, "blContextGetType");
@@ -1447,6 +1595,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blContextInit, "blContextInit");
     lib.bindSymbol_stdcall(blContextInitAs, "blContextInitAs");
     lib.bindSymbol_stdcall(blContextMatrixOp, "blContextMatrixOp");
+    lib.bindSymbol_stdcall(blContextQueryProperty, "blContextQueryProperty");
     lib.bindSymbol_stdcall(blContextReset, "blContextReset");
     lib.bindSymbol_stdcall(blContextRestore, "blContextRestore");
     lib.bindSymbol_stdcall(blContextRestoreClipping, "blContextRestoreClipping");
@@ -1456,6 +1605,8 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blContextSetFillAlpha, "blContextSetFillAlpha");
     lib.bindSymbol_stdcall(blContextSetFillRule, "blContextSetFillRule");
     lib.bindSymbol_stdcall(blContextSetFillStyle, "blContextSetFillStyle");
+    lib.bindSymbol_stdcall(blContextSetFillStyleObject, "blContextSetFillStyleObject");
+    lib.bindSymbol_stdcall(blContextSetFillStyleRgba, "blContextSetFillStyleRgba");
     lib.bindSymbol_stdcall(blContextSetFillStyleRgba32, "blContextSetFillStyleRgba32");
     lib.bindSymbol_stdcall(blContextSetFillStyleRgba64, "blContextSetFillStyleRgba64");
     lib.bindSymbol_stdcall(blContextSetFlattenMode, "blContextSetFlattenMode");
@@ -1472,6 +1623,8 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blContextSetStrokeMiterLimit, "blContextSetStrokeMiterLimit");
     lib.bindSymbol_stdcall(blContextSetStrokeOptions, "blContextSetStrokeOptions");
     lib.bindSymbol_stdcall(blContextSetStrokeStyle, "blContextSetStrokeStyle");
+    lib.bindSymbol_stdcall(blContextSetStrokeStyleObject, "blContextSetStrokeStyleObject");
+    lib.bindSymbol_stdcall(blContextSetStrokeStyleRgba, "blContextSetStrokeStyleRgba");
     lib.bindSymbol_stdcall(blContextSetStrokeStyleRgba32, "blContextSetStrokeStyleRgba32");
     lib.bindSymbol_stdcall(blContextSetStrokeStyleRgba64, "blContextSetStrokeStyleRgba64");
     lib.bindSymbol_stdcall(blContextSetStrokeTransformOrder, "blContextSetStrokeTransformOrder");
@@ -1507,16 +1660,19 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blFontDataCreateFromData, "blFontDataCreateFromData");
     lib.bindSymbol_stdcall(blFontDataCreateFromDataArray, "blFontDataCreateFromDataArray");
     lib.bindSymbol_stdcall(blFontDataCreateFromFile, "blFontDataCreateFromFile");
+    lib.bindSymbol_stdcall(blFontDataDestroy, "blFontDataDestroy");
     lib.bindSymbol_stdcall(blFontDataEquals, "blFontDataEquals");
     lib.bindSymbol_stdcall(blFontDataInit, "blFontDataInit");
     lib.bindSymbol_stdcall(blFontDataListTags, "blFontDataListTags");
     lib.bindSymbol_stdcall(blFontDataQueryTables, "blFontDataQueryTables");
     lib.bindSymbol_stdcall(blFontDataReset, "blFontDataReset");
+    lib.bindSymbol_stdcall(blFontDestroy, "blFontDestroy");
     lib.bindSymbol_stdcall(blFontEquals, "blFontEquals");
     lib.bindSymbol_stdcall(blFontFaceAssignMove, "blFontFaceAssignMove");
     lib.bindSymbol_stdcall(blFontFaceAssignWeak, "blFontFaceAssignWeak");
     lib.bindSymbol_stdcall(blFontFaceCreateFromData, "blFontFaceCreateFromData");
     lib.bindSymbol_stdcall(blFontFaceCreateFromFile, "blFontFaceCreateFromFile");
+    lib.bindSymbol_stdcall(blFontFaceDestroy, "blFontFaceDestroy");
     lib.bindSymbol_stdcall(blFontFaceEquals, "blFontFaceEquals");
     lib.bindSymbol_stdcall(blFontFaceGetDesignMetrics, "blFontFaceGetDesignMetrics");
     lib.bindSymbol_stdcall(blFontFaceGetFaceInfo, "blFontFaceGetFaceInfo");
@@ -1532,10 +1688,19 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blFontGetMetrics, "blFontGetMetrics");
     lib.bindSymbol_stdcall(blFontGetTextMetrics, "blFontGetTextMetrics");
     lib.bindSymbol_stdcall(blFontInit, "blFontInit");
+    lib.bindSymbol_stdcall(blFontManagerAddFace, "blFontManagerAddFace");
     lib.bindSymbol_stdcall(blFontManagerAssignMove, "blFontManagerAssignMove");
     lib.bindSymbol_stdcall(blFontManagerAssignWeak, "blFontManagerAssignWeak");
+    lib.bindSymbol_stdcall(blFontManagerCreate, "blFontManagerCreate");
+    lib.bindSymbol_stdcall(blFontManagerDestroy, "blFontManagerDestroy");
     lib.bindSymbol_stdcall(blFontManagerEquals, "blFontManagerEquals");
+    lib.bindSymbol_stdcall(blFontManagerGetFaceCount, "blFontManagerGetFaceCount");
+    lib.bindSymbol_stdcall(blFontManagerGetFamilyCount, "blFontManagerGetFamilyCount");
+    lib.bindSymbol_stdcall(blFontManagerHasFace, "blFontManagerHasFace");
     lib.bindSymbol_stdcall(blFontManagerInit, "blFontManagerInit");
+    lib.bindSymbol_stdcall(blFontManagerInitNew, "blFontManagerInitNew");
+    lib.bindSymbol_stdcall(blFontManagerQueryFace, "blFontManagerQueryFace");
+    lib.bindSymbol_stdcall(blFontManagerQueryFacesByFamilyName, "blFontManagerQueryFacesByFamilyName");
     lib.bindSymbol_stdcall(blFontManagerReset, "blFontManagerReset");
     lib.bindSymbol_stdcall(blFontMapTextToGlyphs, "blFontMapTextToGlyphs");
     lib.bindSymbol_stdcall(blFontPositionGlyphs, "blFontPositionGlyphs");
@@ -1544,6 +1709,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blFormatInfoQuery, "blFormatInfoQuery");
     lib.bindSymbol_stdcall(blFormatInfoSanitize, "blFormatInfoSanitize");
     lib.bindSymbol_stdcall(blGlyphBufferClear, "blGlyphBufferClear");
+    lib.bindSymbol_stdcall(blGlyphBufferDestroy, "blGlyphBufferDestroy");
     lib.bindSymbol_stdcall(blGlyphBufferGetContent, "blGlyphBufferGetContent");
     lib.bindSymbol_stdcall(blGlyphBufferGetFlags, "blGlyphBufferGetFlags");
     lib.bindSymbol_stdcall(blGlyphBufferGetGlyphRun, "blGlyphBufferGetGlyphRun");
@@ -1563,6 +1729,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blGradientAssignStops, "blGradientAssignStops");
     lib.bindSymbol_stdcall(blGradientAssignWeak, "blGradientAssignWeak");
     lib.bindSymbol_stdcall(blGradientCreate, "blGradientCreate");
+    lib.bindSymbol_stdcall(blGradientDestroy, "blGradientDestroy");
     lib.bindSymbol_stdcall(blGradientEquals, "blGradientEquals");
     lib.bindSymbol_stdcall(blGradientGetCapacity, "blGradientGetCapacity");
     lib.bindSymbol_stdcall(blGradientGetExtendMode, "blGradientGetExtendMode");
@@ -1596,7 +1763,9 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blImageCodecAssignWeak, "blImageCodecAssignWeak");
     lib.bindSymbol_stdcall(blImageCodecCreateDecoder, "blImageCodecCreateDecoder");
     lib.bindSymbol_stdcall(blImageCodecCreateEncoder, "blImageCodecCreateEncoder");
+    lib.bindSymbol_stdcall(blImageCodecDestroy, "blImageCodecDestroy");
     lib.bindSymbol_stdcall(blImageCodecFindByData, "blImageCodecFindByData");
+    lib.bindSymbol_stdcall(blImageCodecFindByExtension, "blImageCodecFindByExtension");
     lib.bindSymbol_stdcall(blImageCodecFindByName, "blImageCodecFindByName");
     lib.bindSymbol_stdcall(blImageCodecInit, "blImageCodecInit");
     lib.bindSymbol_stdcall(blImageCodecInspectData, "blImageCodecInspectData");
@@ -1607,13 +1776,16 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blImageCreateFromData, "blImageCreateFromData");
     lib.bindSymbol_stdcall(blImageDecoderAssignMove, "blImageDecoderAssignMove");
     lib.bindSymbol_stdcall(blImageDecoderAssignWeak, "blImageDecoderAssignWeak");
+    lib.bindSymbol_stdcall(blImageDecoderDestroy, "blImageDecoderDestroy");
     lib.bindSymbol_stdcall(blImageDecoderInit, "blImageDecoderInit");
     lib.bindSymbol_stdcall(blImageDecoderReadFrame, "blImageDecoderReadFrame");
     lib.bindSymbol_stdcall(blImageDecoderReadInfo, "blImageDecoderReadInfo");
     lib.bindSymbol_stdcall(blImageDecoderReset, "blImageDecoderReset");
     lib.bindSymbol_stdcall(blImageDecoderRestart, "blImageDecoderRestart");
+    lib.bindSymbol_stdcall(blImageDestroy, "blImageDestroy");
     lib.bindSymbol_stdcall(blImageEncoderAssignMove, "blImageEncoderAssignMove");
     lib.bindSymbol_stdcall(blImageEncoderAssignWeak, "blImageEncoderAssignWeak");
+    lib.bindSymbol_stdcall(blImageEncoderDestroy, "blImageEncoderDestroy");
     lib.bindSymbol_stdcall(blImageEncoderInit, "blImageEncoderInit");
     lib.bindSymbol_stdcall(blImageEncoderReset, "blImageEncoderReset");
     lib.bindSymbol_stdcall(blImageEncoderRestart, "blImageEncoderRestart");
@@ -1657,6 +1829,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blPathClear, "blPathClear");
     lib.bindSymbol_stdcall(blPathClose, "blPathClose");
     lib.bindSymbol_stdcall(blPathCubicTo, "blPathCubicTo");
+    lib.bindSymbol_stdcall(blPathDestroy, "blPathDestroy");
     lib.bindSymbol_stdcall(blPathEllipticArcTo, "blPathEllipticArcTo");
     lib.bindSymbol_stdcall(blPathEquals, "blPathEquals");
     lib.bindSymbol_stdcall(blPathFitTo, "blPathFitTo");
@@ -1691,6 +1864,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blPatternAssignMove, "blPatternAssignMove");
     lib.bindSymbol_stdcall(blPatternAssignWeak, "blPatternAssignWeak");
     lib.bindSymbol_stdcall(blPatternCreate, "blPatternCreate");
+    lib.bindSymbol_stdcall(blPatternDestroy, "blPatternDestroy");
     lib.bindSymbol_stdcall(blPatternEquals, "blPatternEquals");
     lib.bindSymbol_stdcall(blPatternInit, "blPatternInit");
     lib.bindSymbol_stdcall(blPatternInitAs, "blPatternInitAs");
@@ -1700,6 +1874,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blPatternSetImage, "blPatternSetImage");
     lib.bindSymbol_stdcall(blPixelConverterAssign, "blPixelConverterAssign");
     lib.bindSymbol_stdcall(blPixelConverterCreate, "blPixelConverterCreate");
+    lib.bindSymbol_stdcall(blPixelConverterDestroy, "blPixelConverterDestroy");
     lib.bindSymbol_stdcall(blPixelConverterInit, "blPixelConverterInit");
     lib.bindSymbol_stdcall(blPixelConverterInitWeak, "blPixelConverterInitWeak");
     lib.bindSymbol_stdcall(blPixelConverterReset, "blPixelConverterReset");
@@ -1719,6 +1894,7 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blRegionCombineBB, "blRegionCombineBB");
     lib.bindSymbol_stdcall(blRegionCombineBR, "blRegionCombineBR");
     lib.bindSymbol_stdcall(blRegionCombineRB, "blRegionCombineRB");
+    lib.bindSymbol_stdcall(blRegionDestroy, "blRegionDestroy");
     lib.bindSymbol_stdcall(blRegionEquals, "blRegionEquals");
     lib.bindSymbol_stdcall(blRegionGetCapacity, "blRegionGetCapacity");
     lib.bindSymbol_stdcall(blRegionGetData, "blRegionGetData");
@@ -1735,7 +1911,6 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blRegionTranslateAndClip, "blRegionTranslateAndClip");
     lib.bindSymbol_stdcall(blRuntimeAssertionFailure, "blRuntimeAssertionFailure");
     lib.bindSymbol_stdcall(blRuntimeCleanup, "blRuntimeCleanup");
-    lib.bindSymbol_stdcall(blRuntimeGetTickCount, "blRuntimeGetTickCount");
     lib.bindSymbol_stdcall(blRuntimeInit, "blRuntimeInit");
     lib.bindSymbol_stdcall(blRuntimeMessageFmt, "blRuntimeMessageFmt");
     lib.bindSymbol_stdcall(blRuntimeMessageOut, "blRuntimeMessageOut");
@@ -1754,12 +1929,14 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blStringClear, "blStringClear");
     lib.bindSymbol_stdcall(blStringCompare, "blStringCompare");
     lib.bindSymbol_stdcall(blStringCompareData, "blStringCompareData");
+    lib.bindSymbol_stdcall(blStringDestroy, "blStringDestroy");
     lib.bindSymbol_stdcall(blStringEquals, "blStringEquals");
     lib.bindSymbol_stdcall(blStringEqualsData, "blStringEqualsData");
     lib.bindSymbol_stdcall(blStringGetCapacity, "blStringGetCapacity");
     lib.bindSymbol_stdcall(blStringGetData, "blStringGetData");
     lib.bindSymbol_stdcall(blStringGetSize, "blStringGetSize");
     lib.bindSymbol_stdcall(blStringInit, "blStringInit");
+    lib.bindSymbol_stdcall(blStringInitWithData, "blStringInitWithData");
     lib.bindSymbol_stdcall(blStringInsertChar, "blStringInsertChar");
     lib.bindSymbol_stdcall(blStringInsertData, "blStringInsertData");
     lib.bindSymbol_stdcall(blStringInsertOp, "blStringInsertOp");
@@ -1773,12 +1950,35 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol_stdcall(blStringShrink, "blStringShrink");
     lib.bindSymbol_stdcall(blStrokeOptionsAssignMove, "blStrokeOptionsAssignMove");
     lib.bindSymbol_stdcall(blStrokeOptionsAssignWeak, "blStrokeOptionsAssignWeak");
+    lib.bindSymbol_stdcall(blStrokeOptionsDestroy, "blStrokeOptionsDestroy");
     lib.bindSymbol_stdcall(blStrokeOptionsInit, "blStrokeOptionsInit");
     lib.bindSymbol_stdcall(blStrokeOptionsInitMove, "blStrokeOptionsInitMove");
     lib.bindSymbol_stdcall(blStrokeOptionsInitWeak, "blStrokeOptionsInitWeak");
     lib.bindSymbol_stdcall(blStrokeOptionsReset, "blStrokeOptionsReset");
+    lib.bindSymbol_stdcall(blStyleAssignMove, "blStyleAssignMove");
+    lib.bindSymbol_stdcall(blStyleAssignObject, "blStyleAssignObject");
+    lib.bindSymbol_stdcall(blStyleAssignRgba, "blStyleAssignRgba");
+    lib.bindSymbol_stdcall(blStyleAssignRgba32, "blStyleAssignRgba32");
+    lib.bindSymbol_stdcall(blStyleAssignRgba64, "blStyleAssignRgba64");
+    lib.bindSymbol_stdcall(blStyleAssignWeak, "blStyleAssignWeak");
+    lib.bindSymbol_stdcall(blStyleDestroy, "blStyleDestroy");
+    lib.bindSymbol_stdcall(blStyleEquals, "blStyleEquals");
+    lib.bindSymbol_stdcall(blStyleGetObject, "blStyleGetObject");
+    lib.bindSymbol_stdcall(blStyleGetRgba, "blStyleGetRgba");
+    lib.bindSymbol_stdcall(blStyleGetRgba32, "blStyleGetRgba32");
+    lib.bindSymbol_stdcall(blStyleGetRgba64, "blStyleGetRgba64");
+    lib.bindSymbol_stdcall(blStyleGetType, "blStyleGetType");
+    lib.bindSymbol_stdcall(blStyleInit, "blStyleInit");
+    lib.bindSymbol_stdcall(blStyleInitMove, "blStyleInitMove");
+    lib.bindSymbol_stdcall(blStyleInitObject, "blStyleInitObject");
+    lib.bindSymbol_stdcall(blStyleInitRgba, "blStyleInitRgba");
+    lib.bindSymbol_stdcall(blStyleInitRgba32, "blStyleInitRgba32");
+    lib.bindSymbol_stdcall(blStyleInitRgba64, "blStyleInitRgba64");
+    lib.bindSymbol_stdcall(blStyleInitWeak, "blStyleInitWeak");
+    lib.bindSymbol_stdcall(blStyleReset, "blStyleReset");
     lib.bindSymbol_stdcall(blVariantAssignMove, "blVariantAssignMove");
     lib.bindSymbol_stdcall(blVariantAssignWeak, "blVariantAssignWeak");
+    lib.bindSymbol_stdcall(blVariantDestroy, "blVariantDestroy");
     lib.bindSymbol_stdcall(blVariantEquals, "blVariantEquals");
     lib.bindSymbol_stdcall(blVariantGetImplType, "blVariantGetImplType");
     lib.bindSymbol_stdcall(blVariantInit, "blVariantInit");

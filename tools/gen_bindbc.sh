@@ -11,7 +11,7 @@ bindstatic_d=${bindbc_blend2d_dir}/bindstatic.d
 bindstatic_load_d=`pwd`/bindstatic_load.d
 binddynamic_d=${bindbc_blend2d_dir}/binddynamic.d
 
-skip_list="blDefaultApproximationOptions,blFormatInfo,blMatrix2DMapPointDArrayFuncs,blNone,blPixelConverterConvert,blRuntimeAllocImpl,blRuntimeFreeImpl"
+skip_list="blDefaultApproximationOptions,blFormatInfo,blMatrix2DMapPointDArrayFuncs,blNone,blPixelConverterConvert,blRuntimeAllocImpl,blRuntimeAllocAlignedImpl,blRuntimeFreeImpl"
 
 function gen_bindstatic
 {

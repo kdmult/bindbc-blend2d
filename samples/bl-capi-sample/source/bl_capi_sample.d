@@ -41,9 +41,9 @@ int main() {
     blGradientAddStopRgba32(&gradient, 0.5, 0xFFFFAF00U);
     blGradientAddStopRgba32(&gradient, 1.0, 0xFFFF0000U);
 
-    blContextSetFillStyle(&ctx, &gradient);
+    blContextSetFillStyleObject(&ctx, &gradient);
     blContextFillAll(&ctx);
-    blGradientReset(&gradient);
+    blGradientDestroy(&gradient);
 
     BLCircle circle;
     circle.cx = 128;
@@ -60,8 +60,8 @@ int main() {
     blImageCodecInit(&codec);
     blImageCodecFindByName(&codec, "BMP", SIZE_MAX, null);
     blImageWriteToFile(&img, "bl-capi-sample.bmp", &codec);
-    blImageCodecReset(&codec);
+    blImageCodecDestroy(&codec);
 
-    blImageReset(&img);
+    blImageDestroy(&img);
     return 0;
 }

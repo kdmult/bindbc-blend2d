@@ -690,8 +690,8 @@ version(BindBlend2D_Static) BLResult blFontManagerReset(BLFontManagerCore* self)
 version(BindBlend2D_Static) BLResult blFontManagerAssignMove(BLFontManagerCore* self, BLFontManagerCore* other);
 version(BindBlend2D_Static) BLResult blFontManagerAssignWeak(BLFontManagerCore* self, const(BLFontManagerCore)* other);
 version(BindBlend2D_Static) BLResult blFontManagerCreate(BLFontManagerCore* self);
-version(BindBlend2D_Static) BLResult blFontManagerGetFaceCount(const(BLFontManagerCore)* self);
-version(BindBlend2D_Static) BLResult blFontManagerGetFamilyCount(const(BLFontManagerCore)* self);
+version(BindBlend2D_Static) size_t blFontManagerGetFaceCount(const(BLFontManagerCore)* self);
+version(BindBlend2D_Static) size_t blFontManagerGetFamilyCount(const(BLFontManagerCore)* self);
 version(BindBlend2D_Static) bool blFontManagerHasFace(const(BLFontManagerCore)* self, const(BLFontFaceCore)* face);
 version(BindBlend2D_Static) BLResult blFontManagerAddFace(BLFontManagerCore* self, const(BLFontFaceCore)* face);
 version(BindBlend2D_Static) BLResult blFontManagerQueryFace(const(BLFontManagerCore)* self, const(char)* name, size_t nameSize, const(BLFontQueryProperties)* properties, BLFontFaceCore* out_);

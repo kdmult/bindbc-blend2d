@@ -573,10 +573,10 @@ __gshared pblFontManagerDestroy blFontManagerDestroy;
 extern(C) @nogc nothrow alias pblFontManagerEquals = bool function(const(BLFontManagerCore)* a, const(BLFontManagerCore)* b);
 __gshared pblFontManagerEquals blFontManagerEquals;
 
-extern(C) @nogc nothrow alias pblFontManagerGetFaceCount = BLResult function(const(BLFontManagerCore)* self);
+extern(C) @nogc nothrow alias pblFontManagerGetFaceCount = size_t function(const(BLFontManagerCore)* self);
 __gshared pblFontManagerGetFaceCount blFontManagerGetFaceCount;
 
-extern(C) @nogc nothrow alias pblFontManagerGetFamilyCount = BLResult function(const(BLFontManagerCore)* self);
+extern(C) @nogc nothrow alias pblFontManagerGetFamilyCount = size_t function(const(BLFontManagerCore)* self);
 __gshared pblFontManagerGetFamilyCount blFontManagerGetFamilyCount;
 
 extern(C) @nogc nothrow alias pblFontManagerHasFace = bool function(const(BLFontManagerCore)* self, const(BLFontFaceCore)* face);

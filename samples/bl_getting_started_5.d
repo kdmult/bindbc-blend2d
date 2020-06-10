@@ -50,7 +50,7 @@ int main() {
     circle.r = 160;
 
     blContextSetCompOp(&ctx, BL_COMP_OP_SRC_OVER);
-    blContextSetFillStyle(&ctx, cast(BLStyleCore*)&radial);
+    blContextSetFillStyleObject(&ctx, &radial);
     blContextFillGeometry(&ctx, BL_GEOMETRY_TYPE_CIRCLE, &circle);
 
     // Second shape filled by a linear gradient.
@@ -66,7 +66,7 @@ int main() {
     BLRoundRect rrect = { 195, 195, 270, 270, 25, 25 };
 
     blContextSetCompOp(&ctx, BL_COMP_OP_DIFFERENCE);
-    blContextSetFillStyle(&ctx, cast(BLStyleCore*)&linear);
+    blContextSetFillStyleObject(&ctx, &linear);
     blContextFillGeometry(&ctx, BL_GEOMETRY_TYPE_ROUND_RECT, &rrect);
 
     blContextEnd(&ctx);
@@ -75,9 +75,9 @@ int main() {
     blImageCodecInit(&codec);
     blImageCodecFindByName(&codec, "BMP", SIZE_MAX, null);
     blImageWriteToFile(&img, "bl-getting-started-5.bmp", &codec);
-    blImageCodecReset(&codec);
+    blImageCodecDestroy(&codec);
 
-    blImageReset(&img);
+    blImageDestroy(&img);
 
     return 0;
 }

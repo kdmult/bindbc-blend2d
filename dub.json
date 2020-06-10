@@ -5,48 +5,100 @@
     "license": "BSL-1.0",
 
     "targetPath": "lib",
-    "targetType": "staticLibrary",
+	"targetType": "staticLibrary",
+	"importPaths": ["source"],
+	"sourcePaths": ["source"],
 
-    "subPackages": [
-        "samples/bl-capi-sample",
-        "samples/bl-getting-started-5",
-    ],
-
-    "libs": [ "blend2d" ],
+    "libs-posix": [ "blend2d" ],
+    "libs-windows": ["lib/blend2d"],
 
     "configurations": [
         {
             "name": "dynamic",
             "versions": ["BindBlend2D_Dynamic"],
-            "dependencies": {
-                "bindbc-loader": "~>0.2.1"
-            }
+            "dependencies": {"bindbc-loader": "~>0.2.1"}
         },
         {
             "name": "dynamicBC",
             "versions": ["BindBlend2D_Dynamic"],
-            "dependencies": {
-                "bindbc-loader": "~>0.2.1"
-            },
-            "subConfigurations": {
-                "bindbc-loader": "yesBC"
-            },
+            "dependencies": {"bindbc-loader": "~>0.2.1"},
+            "subConfigurations": {"bindbc-loader": "yesBC"},
             "dflags": ["-betterC"]
         },
         {
             "name": "static",
             "versions": ["BindBlend2D_Static"],
-            "excludedSourceFiles": [
-                "source/bindbc/blend2d/binddynamic.d"
-            ]
+            "excludedSourceFiles": ["source/bindbc/blend2d/binddynamic.d"]
         },
         {
             "name": "staticBC",
             "versions": ["BindBlend2D_Static"],
-            "excludedSourceFiles": [
-                "source/bindbc/blend2d/binddynamic.d"
-            ],
+            "excludedSourceFiles": ["source/bindbc/blend2d/binddynamic.d"],
             "dflags": ["-betterC"]
+        }
+    ],
+
+    "subPackages": [
+        {
+            "name": "bl-capi-sample",
+            "targetName": "bl-capi-sample",
+            "sourceFiles": ["samples/bl_capi_sample.d"],
+
+            "targetPath": "bin",
+            "targetType": "executable",
+            "dependencies": {"bindbc-blend2d": "*"},
+
+            "configurations" : [
+                {
+                    "name" : "dynamic",
+                    "subConfigurations" : {"bindbc-blend2d": "dynamic"}
+                }, 
+                {
+                    "name" : "dynamicBC",
+                    "subConfigurations" : {"bindbc-blend2d": "dynamicBC"},
+                    "dflags": ["-betterC"]
+                }, 
+                {
+                    "name" : "static",
+                    "subConfigurations" : {"bindbc-blend2d": "static"}
+                },
+                {
+                    "name" : "staticBC",
+                    "subConfigurations" : {"bindbc-blend2d": "staticBC"},
+                    "dflags": ["-betterC"]
+                }
+            ]
         },
+        {
+            "name": "bl-getting-started-5",
+            "targetName": "bl-getting-started-5",
+            "sourceFiles": ["samples/bl_getting_started_5.d"],
+
+            "targetPath": "bin",
+            "targetType": "executable",
+            "dependencies": {"bindbc-blend2d": "*"},
+
+            "configurations" : [
+                {
+                    "name" : "dynamic",
+                    "subConfigurations" : {"bindbc-blend2d": "dynamic"}
+                }, 
+                {
+                    "name" : "dynamicBC",
+                    "subConfigurations" : {"bindbc-blend2d": "dynamicBC"},
+                    "dflags": ["-betterC"]
+                }, 
+                {
+                    "name" : "static",
+                    "subConfigurations" : {"bindbc-blend2d": "static"}
+                },
+                {
+                    "name" : "staticBC",
+                    "subConfigurations" : {"bindbc-blend2d": "staticBC"},
+                    "dflags": ["-betterC"]
+                }
+            ]
+        }
     ]
+
 }

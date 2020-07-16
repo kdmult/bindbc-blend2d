@@ -5,10 +5,8 @@ dub.selections.json
 *.sln
 *.visualdproj
 *.7z
-*.lib
 *.exp
 *.exe
-*.dll
 /bin/*
 !/bin/blend2d.dll
 /lib/*

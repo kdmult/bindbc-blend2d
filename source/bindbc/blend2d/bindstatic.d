@@ -2,6 +2,7 @@ module bindbc.blend2d.bindstatic;
 
 version(BindBC_Static) version = BindBlend2D_Static;
 
+import core.stdc.stdint;
 import core.stdc.stdarg;
 
 auto BL_MAJOR_VERSION(uint ver) { return ver >> 16; }
@@ -21,6 +22,7 @@ enum expandEnum(EnumType, string fqnEnumType = EnumType.stringof) = (){
     expandEnum  ~= "}";
     return expandEnum;
 }();
+
 
 mixin(expandEnum!BLResultCode);
 mixin(expandEnum!BLByteOrder);
@@ -94,6 +96,10 @@ mixin(expandEnum!BLRuntimeCleanupFlags);
 mixin(expandEnum!BLStyleType);
 mixin(expandEnum!BLImplType);
 mixin(expandEnum!BLImplTraits);
+
+
+//****** api.d ******//
+
 import core.stdc.stddef;
 import core.stdc.stdint;
 
@@ -1008,6 +1014,12 @@ version(BindBlend2D_Static) uint blVariantGetImplType(const(void)* self);
 version(BindBlend2D_Static) BLResult blVariantAssignMove(void* self, void* other);
 version(BindBlend2D_Static) BLResult blVariantAssignWeak(void* self, const(void)* other);
 version(BindBlend2D_Static) bool blVariantEquals(const(void)* a, const(void)* b);
+
+version(BindBlend2D_Static) version(Windows) BLResult blResultFromWinError(uint e);
+version(BindBlend2D_Static) version(Posix) BLResult blResultFromPosixError(int e);
+
+//****** array.d ******//
+
 extern (C):
 
 struct BLArrayImpl
@@ -1045,7 +1057,13 @@ struct BLArrayCore
 {
     BLArrayImpl* impl;
 }
+
+//****** bitarray.d ******//
+
 extern (C):
+
+
+//****** context.d ******//
 
 extern (C):
 
@@ -1379,7 +1397,10 @@ struct BLContextCore
 {
     BLContextImpl* impl;
 }
-import core.stdc.stdint;
+
+//****** filesystem.d ******//
+
+import core.stdc.string;
 
 extern (C):
 
@@ -1432,6 +1453,9 @@ struct BLFileCore
 {
     intptr_t handle;
 }
+
+//****** font.d ******//
+
 extern (C):
 
 struct BLFontDataVirt
@@ -1547,6 +1571,9 @@ struct BLFontCore
 {
     BLFontImpl* impl;
 }
+
+//****** fontdefs.d ******//
+
 extern (C):
 
 enum BLGlyphPlacementType
@@ -2264,6 +2291,9 @@ struct BLTextMetrics
     BLPoint trailingBearing;
     BLBox boundingBox;
 }
+
+//****** fontmanager.d ******//
+
 extern (C):
 
 struct BLFontManagerVirt
@@ -2290,6 +2320,9 @@ struct BLFontManagerCore
 {
     BLFontManagerImpl* impl;
 }
+
+//****** format.d ******//
+
 extern (C):
 
 enum BLFormat
@@ -2365,6 +2398,9 @@ struct BLFormatInfo
 }
 
 extern __gshared const(BLFormatInfo)[BL_FORMAT_RESERVED_COUNT] blFormatInfo;
+
+//****** geometry.d ******//
+
 extern (C):
 
 enum BLGeometryDirection
@@ -2557,6 +2593,9 @@ struct BLArc
     double start;
     double sweep;
 }
+
+//****** glyphbuffer.d ******//
+
 extern (C):
 
 struct BLGlyphBufferImpl
@@ -2586,6 +2625,9 @@ struct BLGlyphBufferCore
 {
     BLGlyphBufferImpl* impl;
 }
+
+//****** gradient.d ******//
+
 extern (C):
 
 enum BLGradientType
@@ -2694,7 +2736,10 @@ struct BLGradientCore
 {
     BLGradientImpl* impl;
 }
-import core.stdc.stdint;
+
+//****** image.d ******//
+
+import core.stdc.string;
 
 extern (C):
 
@@ -2816,6 +2861,9 @@ struct BLImageCore
 {
     BLImageImpl* impl;
 }
+
+//****** imagecodec.d ******//
+
 extern (C):
 
 enum BLImageCodecFeatures
@@ -2943,6 +2991,9 @@ struct BLImageEncoderCore
 {
     BLImageEncoderImpl* impl;
 }
+
+//****** matrix.d ******//
+
 extern (C):
 
 alias BLMapPointDArrayFunc = uint function(const(void)* ctx, BLPoint* dst, const(BLPoint)* src, size_t count);
@@ -3033,6 +3084,9 @@ struct BLMatrix2D
 }
 
 extern __gshared BLMapPointDArrayFunc[BL_MATRIX2D_TYPE_COUNT] blMatrix2DMapPointDArrayFuncs;
+
+
+//****** path.d ******//
 
 extern (C):
 
@@ -3228,6 +3282,9 @@ struct BLPathCore
 {
     BLPathImpl* impl;
 }
+
+//****** pattern.d ******//
+
 extern (C):
 
 struct BLPatternImpl
@@ -3259,7 +3316,10 @@ struct BLPatternCore
 {
     BLPatternImpl* impl;
 }
-import core.stdc.stdint;
+
+//****** pixelconverter.d ******//
+
+import core.stdc.string;
 
 extern (C):
 
@@ -3294,12 +3354,18 @@ struct BLPixelConverterCore
         ubyte[80] data;
     }
 }
+
+//****** random.d ******//
+
 extern (C):
 
 struct BLRandom
 {
     ulong[2] data;
 }
+
+//****** region.d ******//
+
 extern (C):
 
 enum BLRegionType
@@ -3346,6 +3412,9 @@ struct BLRegionCore
 {
     BLRegionImpl* impl;
 }
+
+//****** rgba.d ******//
+
 extern (C):
 
 struct BLRgba32
@@ -3393,6 +3462,9 @@ struct BLRgba
     float b;
     float a;
 }
+
+//****** runtime.d ******//
+
 extern (C):
 
 enum BLRuntimeLimits
@@ -3527,6 +3599,9 @@ struct BLRuntimeResourceInfo
 
     size_t[5] reserved;
 }
+
+//****** string.d ******//
+
 extern (C):
 
 struct BLStringImpl
@@ -3560,6 +3635,9 @@ struct BLStringCore
 {
     BLStringImpl* impl;
 }
+
+//****** style.d ******//
+
 extern (C):
 
 enum BLStyleType
@@ -3599,7 +3677,10 @@ struct BLStyleCore
         ulong[2] u64Data;
     }
 }
-import core.stdc.stdint;
+
+//****** variant.d ******//
+
+import core.stdc.string;
 
 extern (C):
 
@@ -3733,6 +3814,3 @@ struct BLVariantCore
 }
 
 extern __gshared BLVariantCore[BL_IMPL_TYPE_COUNT] blNone;
-
-version(BindBlend2D_Static) version(Windows) BLResult blResultFromWinError(uint e);
-version(BindBlend2D_Static) version(Posix) BLResult blResultFromPosixError(int e);

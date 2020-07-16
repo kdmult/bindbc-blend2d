@@ -40,7 +40,7 @@
 
     "subPackages": [
         {
-            "name": "bl-capi-sample",
+            "name": "bl_capi_sample",
             "targetName": "bl-capi-sample",
             "sourceFiles": ["samples/bl_capi_sample.d"],
 
@@ -70,7 +70,7 @@
             ]
         },
         {
-            "name": "bl-getting-started-5",
+            "name": "bl_getting_started_5",
             "targetName": "bl-getting-started-5",
             "sourceFiles": ["samples/bl_getting_started_5.d"],
 

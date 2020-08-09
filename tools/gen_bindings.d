@@ -6,25 +6,18 @@ alias writeText = std.file.write;
 
 void main(string[] args)
 {
-	bool quiet = false;
-	getopt(args,
-		std.getopt.config.bundling,
-		"q|quiet", &quiet);
-
     void writeUsage()
     {
-		stdout.writefln("\nUsage: %s [options] <blend2d_repo_path>", args[0].baseName);
-		stdout.writeln("Options:");
-		stdout.writeln(" -q  --quiet           No screen messages");
+        stdout.writefln("\nUsage: %s [options] <blend2d_repo_path>", args[0].baseName);
     }
 
-	if (args.length < 2)
-	{
+    if (args.length < 2)
+    {
         writeUsage;
-		return;
-	}
+        return;
+    }
 
-	string dirBlend2d = args[1];
+    string dirBlend2d = args[1];
     if (!dirBlend2d.exists || !dirBlend2d.isDir)
     {
         stderr.writeln("<blend2d_repo_path> is expected to be an existing directory: ", dirBlend2d);
@@ -238,7 +231,7 @@ version(Posix) {
 EOL");
 
         auto fns = symbols.filter!(a => skipFnList.find(a).empty);
-        auto re_fns = regex(" (" ~ fns.join("|") ~ r")\(");    
+        auto re_fns = regex(" (" ~ fns.join("|") ~ r")\(");
         foreach (line; bufBindStatic.data)
         {
             const m = line.matchFirst(re_fns);

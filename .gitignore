@@ -6,6 +6,7 @@ dub.selections.json
 *.visualdproj
 *.7z
 *.exp
+*.obj
 *.exe
 /bin/*
 !/bin/blend2d.dll

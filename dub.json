@@ -10,18 +10,18 @@
 	"sourcePaths": ["source"],
 
     "libs-posix": [ "blend2d" ],
-    "libs-windows": ["lib/blend2d"],
+    "libs-windows": ["$PACKAGE_DIR/lib/blend2d"],
 
     "configurations": [
         {
             "name": "dynamic",
             "versions": ["BindBlend2D_Dynamic"],
-            "dependencies": {"bindbc-loader": "~>0.2.1"}
+            "dependencies": {"bindbc-loader": "~>0.3.2"}
         },
         {
             "name": "dynamicBC",
             "versions": ["BindBlend2D_Dynamic"],
-            "dependencies": {"bindbc-loader": "~>0.2.1"},
+            "dependencies": {"bindbc-loader": "~>0.3.2"},
             "subConfigurations": {"bindbc-loader": "yesBC"},
             "dflags": ["-betterC"]
         },
@@ -73,6 +73,36 @@
             "name": "bl_getting_started_5",
             "targetName": "bl-getting-started-5",
             "sourceFiles": ["samples/bl_getting_started_5.d"],
+
+            "targetPath": "bin",
+            "targetType": "executable",
+            "dependencies": {"bindbc-blend2d": "*"},
+
+            "configurations" : [
+                {
+                    "name" : "dynamic",
+                    "subConfigurations" : {"bindbc-blend2d": "dynamic"}
+                }, 
+                {
+                    "name" : "dynamicBC",
+                    "subConfigurations" : {"bindbc-blend2d": "dynamicBC"},
+                    "dflags": ["-betterC"]
+                }, 
+                {
+                    "name" : "static",
+                    "subConfigurations" : {"bindbc-blend2d": "static"}
+                },
+                {
+                    "name" : "staticBC",
+                    "subConfigurations" : {"bindbc-blend2d": "staticBC"},
+                    "dflags": ["-betterC"]
+                }
+            ]
+        },
+        {
+            "name": "bl_getting_started_1",
+            "targetName": "bl-getting-started-1",
+            "sourceFiles": ["samples/bl_getting_started_1.d"],
 
             "targetPath": "bin",
             "targetType": "executable",

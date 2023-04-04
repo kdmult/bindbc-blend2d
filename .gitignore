@@ -8,6 +8,8 @@ dub.selections.json
 *.exp
 *.obj
 *.exe
+*.ilk
+*.pdb
 /bin/*
 !/bin/blend2d.dll
 /lib/*

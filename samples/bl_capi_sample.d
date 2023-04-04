@@ -41,7 +41,7 @@ int main() {
     blGradientAddStopRgba32(&gradient, 0.5, 0xFFFFAF00U);
     blGradientAddStopRgba32(&gradient, 1.0, 0xFFFF0000U);
 
-    blContextSetFillStyleObject(&ctx, &gradient);
+    blContextSetFillStyle(&ctx, &gradient);
     blContextFillAll(&ctx);
     blGradientDestroy(&gradient);
 

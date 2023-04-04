@@ -50,7 +50,7 @@ int main() {
     circle.r = 160;
 
     blContextSetCompOp(&ctx, BL_COMP_OP_SRC_OVER);
-    blContextSetFillStyleObject(&ctx, &radial);
+    blContextSetFillStyle(&ctx, &radial);
     blContextFillGeometry(&ctx, BL_GEOMETRY_TYPE_CIRCLE, &circle);
 
     // Second shape filled by a linear gradient.
@@ -66,7 +66,7 @@ int main() {
     BLRoundRect rrect = { 195, 195, 270, 270, 25, 25 };
 
     blContextSetCompOp(&ctx, BL_COMP_OP_DIFFERENCE);
-    blContextSetFillStyleObject(&ctx, &linear);
+    blContextSetFillStyle(&ctx, &linear);
     blContextFillGeometry(&ctx, BL_GEOMETRY_TYPE_ROUND_RECT, &rrect);
 
     blContextEnd(&ctx);

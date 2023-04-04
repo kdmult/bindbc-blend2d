@@ -39,7 +39,6 @@ class GenBindings
         "blDefaultApproximationOptions",
         "blFormatInfo",
         "blMatrix2DMapPointDArrayFuncs",
-        "blNone",
         "blPixelConverterConvert",
         "blRuntimeAllocImpl",
         "blRuntimeAllocAlignedImpl",
@@ -47,8 +46,9 @@ class GenBindings
     ];
 
     string cwd;
-    string dirBlend2dRepoSrc;
-    string[string] dFiles;
+    string dirBlend2dSrc;
+    string dirBlend2dSrcBlend2d;
+    string dFile;
     string[] symbols;
     string fileSymbols;
     string fileBindStatic;
@@ -60,7 +60,8 @@ class GenBindings
     this(string dirBlend2d)
     {
         cwd = getcwd();
-        dirBlend2dRepoSrc = chainPath(dirBlend2d, "src/blend2d").array;
+        dirBlend2dSrc = absolutePath(chainPath(dirBlend2d, "src").array, cwd);
+        dirBlend2dSrcBlend2d = absolutePath(chainPath(dirBlend2dSrc, "blend2d").array, cwd);
         fileSymbols = chainPath(cwd, "symbols.txt").array;
         string dirBindBC = chainPath(cwd, "../source/bindbc/blend2d").array;
         fileBindStatic = chainPath(dirBindBC, "bindstatic.d").array;
@@ -75,62 +76,63 @@ class GenBindings
 
     void initialize()
     {
-        dFiles = genDFiles;
+        dFile = genDFile();
         symbols = readText(fileSymbols).splitLines;
     }
 
-    string[string] genDFiles()
+    string genDFile()
     {
-        chdir(dirBlend2dRepoSrc);
+        chdir(dirBlend2dSrc);
         scope(exit) chdir(cwd);
 
-        auto hFiles = dirEntries("", SpanMode.breadth).filter!(
-            f => f.name.endsWith(".h")
-                && !f.name.endsWith("_p.h")
-                && !f.name.endsWith("-impl.h")
-            ).array;
+        auto tmpFile = chainPath(dirBlend2dSrcBlend2d, "blend2d-api.h").array;
+        append(tmpFile, "// The file is generated automatically");
+        scope(exit) tmpFile.remove;
 
-        typeof(return) result;
-
-        foreach (i, ref h; parallel(hFiles, 1))
+        auto re = ctRegex!(`#include "(.+)"`);
+        foreach (line; readText("blend2d.h").splitLines)
         {
-            auto pid = spawnProcess(["dstep",
-                "--collision-action=ignore",
-                "--space-after-function-name=false",
-                "--comments=false",
-                h.name]);
-            enforce(pid.wait() == 0, "dstep failed on " ~ h.name);
+            auto m = matchFirst(line, re);
+            if (m.empty)
+                continue;
 
-            auto d = h.name.withExtension("d").array;
-            result[d] = readText(d);
-            remove(d);
+            append(tmpFile, "\n\n//****** " ~ m[1] ~ " ******//\n\n");
+            append(tmpFile, readText(m[1]));
         }
 
-        return result;
-    }
+        chdir(dirBlend2dSrcBlend2d);
 
-    void commentOutLines()
-    {
-        auto api = dFiles[dApi];
-        auto toBeCommentedOut = [
-            ctRegex!(r"^(struct .+;)", "m"),
-            ctRegex!(r"^(.* _Pragma\(.+;)", "m"),
-            ctRegex!(r"^(BLResult blResultFromWinError.+;)", "m"),
-            ctRegex!(r"^(BLResult blResultFromPosixError.+;)", "m"),
-        ];
-        foreach (ref re; toBeCommentedOut)
-            api = replaceAll(api, re, "//$&");
-        dFiles[dApi] = api;
-    }
+        auto preprocessedFile = "blend2d-api.c";
+        auto gccOut = File(preprocessedFile, "w");
+        auto pidGcc = spawnProcess(["gcc", "-E", "-P", tmpFile], std.stdio.stdin, gccOut);
+        enforce(pidGcc.wait() == 0, "gcc preprocessor failed on " ~ tmpFile);
+        gccOut.close();
+        scope(exit) remove(preprocessedFile);
 
-    void addVersionStatic()
-    {
-        auto api = dFiles[dApi];
-        foreach (ref fn; symbols)
-            api = replaceAll(api, regex(r"^(.* " ~ fn ~ r"\()", "m"), versionStatic ~ "$&");
-        api ~= "\n" ~ versionStatic ~ "version(Windows) BLResult blResultFromWinError(uint e);";
-        api ~= "\n" ~ versionStatic ~ "version(Posix) BLResult blResultFromPosixError(int e);";
-        dFiles[dApi] = api;
+        string[] txt;
+        txt ~= "#include <stdarg.h>";
+        txt ~= "#include <stdint.h>";
+        auto lines = readText(preprocessedFile).splitLines;
+        foreach (i, line; lines)
+        {
+            if (indexOf(line, "typedef struct BL") != 0)
+                continue;
+            txt ~= lines[i..$];
+            break;
+        }
+        writeText(preprocessedFile, txt.join("\n"));
+
+        auto pidDStep = spawnProcess(["dstep",
+            "--output=" ~ dApi,
+            "--collision-action=ignore",
+            "--single-line-function-signatures=true",
+            "--space-after-function-name=false",
+            "--comments=false",
+            preprocessedFile]);
+        enforce(pidDStep.wait() == 0, "dstep failed on " ~ preprocessedFile);
+        scope(exit) remove(dApi);
+
+        return readText(dApi);
     }
 
     void bindStatic()
@@ -143,13 +145,12 @@ version(BindBC_Static) version = BindBlend2D_Static;
 import core.stdc.stdint;
 import core.stdc.stdarg;
 
-auto BL_MAJOR_VERSION(uint ver) { return ver >> 16; }
-auto BL_MINOR_VERSION(uint ver) { return (ver >> 8) & ((1 << 8) - 1); }
-auto BL_PATCH_VERSION(uint ver) { return ver & ((1 << 8) - 1); }
+auto BL_MAKE_VERSION(uint MAJOR, uint MINOR, uint PATCH)
+{
+    return (MAJOR << 16) | (MINOR << 8) | PATCH;
+}
 
-enum BLEND2D_VERSION_MAJOR = BL_MAJOR_VERSION(BL_VERSION);
-enum BLEND2D_VERSION_MINOR = BL_MINOR_VERSION(BL_VERSION);
-enum BLEND2D_VERSION_REVISION = BL_PATCH_VERSION(BL_VERSION);
+enum BL_VERSION = BL_MAKE_VERSION(0, 8, 0);
 
 private
 enum expandEnum(EnumType, string fqnEnumType = EnumType.stringof) = (){
@@ -161,30 +162,43 @@ enum expandEnum(EnumType, string fqnEnumType = EnumType.stringof) = (){
     return expandEnum;
 }();
 
+struct BLObjectImpl;
+
 EOL");
 
         string[] enums;
         auto re = ctRegex!(r"^enum ([^;{]+)$");
-        foreach (d; dFiles.keys.sort)
-            foreach (line; dFiles[d].splitLines)
-            {
-                auto m = matchFirst(line, re);
-                if (!m.empty)
-                    enums ~= "mixin(expandEnum!" ~ m[1] ~ ");";
-            }
+        foreach (line; dFile.splitLines)
+        {
+            auto m = matchFirst(line, re);
+            if (!m.empty)
+                enums ~= "mixin(expandEnum!" ~ m[1] ~ ");";
+        }
         enums ~= "";
         bufBindStatic.put(enums.join("\n"));
 
-        commentOutLines;
-        addVersionStatic;
+        auto toBeCommentedOut = [
+            ctRegex!(r"^(struct .+;)", "m"),
+            ctRegex!(r"^(union .+;)", "m"),
+            ctRegex!(r"^(.* _Pragma\(.+;)", "m"),
+            ctRegex!(r"^(BLResult blResultFromWinError.+;)", "m"),
+            ctRegex!(r"^(BLResult blResultFromPosixError.+;)", "m"),
+        ];
 
-        foreach (d; dFiles.keys.sort)
-        {
-            bufBindStatic.put("");
-            bufBindStatic.put("//****** " ~ d.baseName ~ " ******//");
-            bufBindStatic.put("");
-            bufBindStatic.put(dFiles[d].splitLines);
-        }
+        bufBindStatic.put("");
+        bufBindStatic.put("//****** " ~ dApi ~ " ******//");
+        bufBindStatic.put("");
+
+        foreach (ref rx; toBeCommentedOut)
+            dFile = replaceAll(dFile, rx, "//$&");
+
+        foreach (ref fn; symbols)
+            dFile = replaceAll(dFile, regex(r"^(.* " ~ fn ~ r"\()", "m"), versionStatic ~ "$&");
+        bufBindStatic.put(dFile.splitLines);
+
+        bufBindStatic.put("");
+        bufBindStatic.put(versionStatic ~ "version(Windows) BLResult blResultFromWinError(uint e);");
+        bufBindStatic.put(versionStatic ~ "version(Posix) BLResult blResultFromPosixError(int e);");
     }
 
     void bindDynamic()
@@ -210,11 +224,8 @@ __gshared pblDefaultApproximationOptions blDefaultApproximationOptions;
 extern(C) @nogc nothrow alias pblFormatInfo = const(BLFormatInfo)[BL_FORMAT_RESERVED_COUNT];
 __gshared pblFormatInfo blFormatInfo;
 
-extern(C) @nogc nothrow alias pblMatrix2DMapPointDArrayFuncs = BLMapPointDArrayFunc[BL_MATRIX2D_TYPE_COUNT];
+extern(C) @nogc nothrow alias pblMatrix2DMapPointDArrayFuncs = BLMapPointDArrayFunc[BL_MATRIX2D_TYPE_MAX_VALUE + 1];
 __gshared pblMatrix2DMapPointDArrayFuncs blMatrix2DMapPointDArrayFuncs;
-
-extern(C) @nogc nothrow alias pblNone = BLVariantCore[BL_IMPL_TYPE_COUNT];
-__gshared pblNone blNone;
 
 extern(C) @nogc nothrow alias pblPixelConverterConvert = BLResult function(const(BLPixelConverterCore)* self, void* dstData, intptr_t dstStride, const(void)* srcData, intptr_t srcStride, uint w, uint h, const(BLPixelConverterOptions)* options);
 __gshared pblPixelConverterConvert blPixelConverterConvert;
@@ -309,7 +320,6 @@ Blend2DSupport loadBlend2D(const(char)* libName)
     lib.bindSymbol(cast(void**)&blDefaultApproximationOptions, "blDefaultApproximationOptions");
     lib.bindSymbol(cast(void**)&blFormatInfo, "blFormatInfo");
     lib.bindSymbol(cast(void**)&blMatrix2DMapPointDArrayFuncs, "blMatrix2DMapPointDArrayFuncs");
-    lib.bindSymbol(cast(void**)&blNone, "blNone");
 
     lib.bindSymbol_stdcall(blPixelConverterConvert, "blPixelConverterConvert");
 
